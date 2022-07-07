@@ -1,3 +1,10 @@
+---
+header-includes:
+  - \hypersetup{colorlinks=false,
+            allbordercolors={0 0 0},
+            pdfborderstyle={/S/U/W 1}}
+---
+
 ## Chapter 1
 ### 1-1)
 
@@ -214,7 +221,6 @@ assume it flows at a rate of 10 km/h. This gives us a flow rate of $50,000,000
 \:\text{m}^3/\text{h}$, or $1,200,000,000 \:\text{m}^3/\text{day}$. Converting
 to freedom units, we arrive at about 2.87 cubic miles per day.
 
-
 ### 1-25)
 #### (a)
 We can frame this as $kn^2 = \text{run time}$. $k(1000)^2 = 1\:\text{s}
@@ -225,3 +231,33 @@ We can frame this as $kn^2 = \text{run time}$. $k(1000)^2 = 1\:\text{s}
 This time our formula is $kn\log{n} = \text{run time}$. $k(1000)\log{1000} = 1
 \:\text{s} \Rightarrow k \approx 100.3 \:\mu\text{s}$. So for $n = 10,000$, we
 obtain a run time of about $13.33 \:\text{s}$.
+
+### 1-27)
+[Note: the Psychic Modeling war story and this associated problem seem to be
+somewhat misphrased in that the parameter $j$ appears to have no relevance to
+the problem as stated. I did some incredulous googling and found that [I wasn't
+the only one who was confused by
+this](https://mikkqu.com/notes/psychic-modeling/). For this reason, I'm
+choosing to ignore $j$ entirely.]
+
+Given a candidate set $S$ (with $\lvert S \rvert = n$), slot count $k$, and
+number of matching numbers necessary to win a prize $l$, we may identify
+whether a given set of tickets establishes sufficient coverage to guarantee a
+prize as follows.
+
+Essentially, a set of tickets must cover the set of all $\binom{n}{l}$
+combinations of numbers. However, the tickets don't actually need to cover all
+of those combinations explicitly: they only need to cover the combinations for
+which it is the case that for each $l$-subset that is not explicitly covered,
+the addition of any $k-l$ numbers from $S$ not already in the $l$-subset to the
+$l$-subset results in a winning ticket. We formalize this in the function
+below.
+
+```{.python include=src/1-27.py snippet=check-tickets}
+```
+
+A function implementing a greedy heuristic algorithm to generate good winning
+combinations of tickets follows.
+
+```{.python include=src/1-27.py snippet=gen-tickets}
+```
