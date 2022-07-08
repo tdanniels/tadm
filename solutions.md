@@ -218,19 +218,19 @@ we get $4 \times 10,000 \times 0.1 \times 100 \times 500 = 200,000,000$.
 I have no idea how wide the mouth of the Mississippi is, though I know it's a
 very large river. Let's assume 1,000 metres wide and 5 metres deep. Then let's
 assume it flows at a rate of 10 km/h. This gives us a flow rate of $50,000,000
-\:\text{m}^3/\text{h}$, or $1,200,000,000 \:\text{m}^3/\text{day}$. Converting
+\ \text{m}^3/\text{h}$, or $1,200,000,000 \ \text{m}^3/\text{day}$. Converting
 to freedom units, we arrive at about 2.87 cubic miles per day.
 
 ### 1-25)
 #### (a)
-We can frame this as $kn^2 = \text{run time}$. $k(1000)^2 = 1\:\text{s}
-\Rightarrow k = 1 \:\mu\text{s}$. For $n = 10,000$, we obtain a run time of $1
-\:\mu\text{s} \times (10,000)^2 = 100 \:\text{s}$.
+We can frame this as $kn^2 = \text{run time}$. $k(1000)^2 = 1\ \text{s}
+\Rightarrow k = 1 \ \mu\text{s}$. For $n = 10,000$, we obtain a run time of $1
+\ \mu\text{s} \times (10,000)^2 = 100 \ \text{s}$.
 
 #### (b)
 This time our formula is $kn\log{n} = \text{run time}$. $k(1000)\log{1000} = 1
-\:\text{s} \Rightarrow k \approx 100.3 \:\mu\text{s}$. So for $n = 10,000$, we
-obtain a run time of about $13.33 \:\text{s}$.
+\ \text{s} \Rightarrow k \approx 100.3 \ \mu\text{s}$. So for $n = 10,000$, we
+obtain a run time of about $13.33 \ \text{s}$.
 
 ### 1-27)
 [Note: the Psychic Modeling war story and this associated problem seem to be
@@ -261,3 +261,61 @@ combinations of tickets follows.
 
 ```{.python include=src/1-27.py snippet=gen-tickets}
 ```
+
+### 1-29)
+[For this problem we'll assume that no races can be tied. Also, that the
+problem is asking for the minimum number of races \textit{across all problem
+instances}, not for any specific cooked instance.]
+
+Label each horse as $h_i$, $1 \leq i \leq 25$. Hold races between
+$\{h_i,\dots,h_{i+4}\}$ for $i = 1, 6, \dots, 21$. After each race, eliminate
+the slowest two horses, as they can't possibly be among the top three fastest.
+After one round of this tournament, we have 15 horses remaining. Re-label these
+horses from 1 to 15, where $h_1$ was the fastest from race 1, $h_2$ the second
+fastest in race 1, $h_4$ the fastest in race 2, etc. Now race the top five
+fastest horses $\{h_i\}_{i=1,4,7,10,13}$. Assume without loss of generality that
+the horses finish in their labeled order. This allows us to eliminate all horses
+known to be slower than horses 7, 10 and 13. Next, race horses $\{h_i\}_{2 \leq i
+\leq 6}$. The fastest three horses are then, in order, $h_1$ and the two
+fastest horses from the final race. This requires 7 races in total.
+
+
+### 1-31)
+Assumptions:
+
+- There are 2 cars for every 3 Americans. This seems fairly reasonable given
+that the United States has a high rate of car ownership, but many don't own
+cars, and people also frequently share the ownership of cars.
+- There is one gas station to every one thousand cars. This also seems
+reasonable given the number of cars that a gas station should be able to
+service per day (about 40 per hour, assuming the gas station is open 24/7).
+- The United States has a population of 300 million.
+
+Multiplying our assumptions out, we obtain
+$$300,000,000 \ \text{people} \  \times \ 2/3 \ \text{cars}/\text{person} \times
+\ 1/1,000 \ \text{gas stations}/\text{car} = 200,000 \ \text{gas stations}.$$
+
+### 1-33)
+Assumptions:
+
+- The United States has an area of 10 million square kilometers.
+- Roads criss cross the country in a grid pattern (obviously not true, but
+useful for simplifying the proceeding calculation), with a spacing of 10
+kilometers between them.
+- The United States is shaped like a square (I know, I know...).
+
+Then we obtain the edge length of the USA as $\sqrt{10^7} \ \text{km}^2
+\approx 3163 \ \text{km}$. The number of roads going vertically is then $3163
+\ \text{km} \ / \ 10 \ \text{km} \ = 316.3$,
+each with a length of $3163 \ \text{km}$, for a total vertical road length
+of $316.3 \times 3163 \ \text{km} \approx 1,000,457 \ \text{km}$. We have the
+same amount of road in the horizontal direction, for a total of $2,000,914
+\ \text{km} \ \approx 1,242,567 \ \text{miles}$ of road.
+
+Looking it up, it seems I'm under by a factor of about 4.
+
+### P1-1)
+See $\texttt{src/p1-1.py}$.
+
+### P1-3)
+See $\texttt{src/p1-3.py}$.
