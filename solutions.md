@@ -1,10 +1,3 @@
----
-header-includes:
-  - \hypersetup{colorlinks=false,
-            allbordercolors={0 0 0},
-            pdfborderstyle={/S/U/W 1}}
----
-
 ## Chapter 1
 ### 1-1)
 
@@ -319,3 +312,36 @@ See $\texttt{src/p1-1.py}$.
 
 ### P1-3)
 See $\texttt{src/p1-3.py}$.
+
+## Chapter 1
+### 2-1)
+We may derive a closed form for $\operatorname{mystery}(n)$ as follows.
+Begin by expressing the function as a summation,
+
+
+\begin{align*}
+\operatorname{mystery}(n) &= \sum_{i=1}^{n-1} \sum_{j=i+1}^n \sum_{k=1}^j 1 \\
+&= \sum_{i=1}^{n-1} \sum_{j=i+1}^n j
+\end{align*}
+
+We may then apply the formula $\sum_{i=1}^n i = \frac{n(n+1)}{2}$ to the above as follows.
+
+\begin{align*}
+\sum_{i=1}^{n-1} \sum_{j=i+1}^n j &= \sum_{i=1}^{n-1} \left( \sum_{j=1}^n j -
+\sum_{k=1}^i k \right) \\
+&= \sum_{i=1}^{n-1} \left( \frac{n(n+1)}{2} - \frac{i(i+1)}{2} \right) \\
+&= \frac{1}{2} \left( n(n+1)(n-1) - \sum_{i=1}^{n-1}i(i+1) \right) \\
+&= \frac{1}{2} \left( n(n+1)(n-1) - \left( \sum_{i=1}^{n-1}i^2 +
+\sum_{i=1}^{n-1}i \right) \right) \\
+&= \frac{1}{2} \left ( n(n+1)(n-1) - \left( \frac{n(n-1)(2n - 1)}{6} +
+\frac{n(n-1)}{2} \right) \right) \\
+&= \frac{1}{2} \left ( n(n+1)(n-1) - \left( \frac{2n^3 - 3n^2 + n}{6} +
+\frac{3n^2 - 3n)}{6} \right) \right) \\
+&= \frac{1}{2} \left ( \frac{6n^3-6n - 2n^3 + 2n}{6} \right) \\
+&= \frac{n^3-n}{3} \\
+\end{align*}
+
+
+The worst-case running time of $\operatorname{mystery}(n)$ is $O(n^3)$, since
+the number of operations it performs per increment of $r$ is independent of $n$,
+and $r$ is incremented $\frac{n^3-n}{3} \in O(n^3)$ times.
