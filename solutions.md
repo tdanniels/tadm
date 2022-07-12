@@ -1,3 +1,8 @@
+---
+header-includes:
+  - \usepackage{algorithm2e}
+---
+
 ## Chapter 1
 ### 1-1)
 
@@ -17,7 +22,6 @@ a ---------------- b
 ```
 
 ### 1-5)
-
 #### (a)
 \begin{align*}
 S &= \{1,2\}\\
@@ -317,15 +321,12 @@ See $\texttt{src/p1-3.py}$.
 ### 2-1)
 We may derive a closed form for $\operatorname{mystery}(n)$ as follows.
 Begin by expressing the function as a summation,
-
-
 \begin{align*}
 \operatorname{mystery}(n) &= \sum_{i=1}^{n-1} \sum_{j=i+1}^n \sum_{k=1}^j 1 \\
 &= \sum_{i=1}^{n-1} \sum_{j=i+1}^n j
 \end{align*}
-
-We may then apply the formula $\sum_{i=1}^n i = \frac{n(n+1)}{2}$ to the above as follows.
-
+In the following derivation we make use of the formulas $\sum_{i=1}^n i =
+\frac{n(n+1)}{2}$ and $\sum_{i=1}^{n}i^2 = \frac{n(n+1)(2n+1)}{6}$.
 \begin{align*}
 \sum_{i=1}^{n-1} \sum_{j=i+1}^n j &= \sum_{i=1}^{n-1} \left( \sum_{j=1}^n j -
 \sum_{k=1}^i k \right) \\
@@ -340,8 +341,93 @@ We may then apply the formula $\sum_{i=1}^n i = \frac{n(n+1)}{2}$ to the above a
 &= \frac{1}{2} \left ( \frac{6n^3-6n - 2n^3 + 2n}{6} \right) \\
 &= \frac{n^3-n}{3} \\
 \end{align*}
-
-
 The worst-case running time of $\operatorname{mystery}(n)$ is $O(n^3)$, since
 the number of operations it performs per increment of $r$ is independent of $n$,
 and $r$ is incremented $\frac{n^3-n}{3} \in O(n^3)$ times.
+
+### 2-3)
+We may derive a closed form for $\operatorname{prestiferous}(n)$ as follows.
+Begin by expressing the function as a summation,
+\begin{align*}
+\operatorname{prestiferous}(n) &= \sum_{i=1}^n \sum_{j=1}^i \sum_{k=j}^{i+j}
+\sum_{l=1}^{i+j-k} 1 \\
+&= \sum_{i=1}^n \sum_{j=1}^i \sum_{k=j}^{i+j} i+j-k \\
+&= \sum_{i=1}^n \sum_{j=1}^i (i+j-j) + (i+j-j-1) + \dots + (i+j-i-j) \\
+&= \sum_{i=1}^n \sum_{j=1}^i i + (i-1) + \dots + 1 \\
+&= \sum_{i=1}^n \sum_{j=1}^i \frac{i(i+1)}{2} \\
+&= \sum_{i=1}^n \frac{i^2(i+1)}{2} \\
+&= \frac{1}{2} \left( \sum_{i=1}^n i^3 + \sum_{i=1}^n i^2 \right) \\
+&= \frac{1}{2} \left( \frac{n^2(n+1)^2}{4} + \frac{n(n+1)(2n+1)}{6} \right) \\
+&= \frac{3n^4+10n^3+9n^2+2n}{24}
+\end{align*}
+The worst-case running time of $\operatorname{prestiferous}(n)$ is $O(n^4)$,
+since the number of operations it performs per increment of $r$ is independent
+of $n$, and $r$ is incremented $\frac{3n^4+10n^3+9n^2+2n}{24} \in O(n^4)$ times.
+
+### 2-5)
+#### (a)
+$2n$ multiplications are done in the worst case. Ignoring loop variable increments,
+$n$ additions are done in the worst case.
+
+#### (b)
+$2n$ multiplications are done on the average.
+
+#### (c)
+We may improve this algorithm by using Horner's method. Rewrite the algorithm as
+
+\begin{algorithm}[H]
+\SetAlgoNoLine
+\DontPrintSemicolon
+$p \leftarrow a_n$\;
+\For{$i \leftarrow n-1$ \KwTo $0$}{
+    $p \leftarrow p * x + a_i$
+}
+\Return{$p$}\;
+\end{algorithm}
+
+This version uses only $n$ multiplications and $n$ additions.
+
+### 2-7)
+#### (a)
+True. $2^{n+1} = 2(2^n) \in O(2^n)$, since we can take $c$ from the
+definition of Big-Oh to be 2.
+
+#### (b)
+False. We proceed by contradiction. Suppose there exists a constant $c$ such
+that $c2^n \geq 2^{2n} = (2^n)^2$ for $n \geq n_0$. Then $c \geq 2^n$, which is
+impossible since $c$ is a constant.
+
+### 2-9)
+#### (a)
+$g(n) \in O(f(n))$ since the $n^2$ term dominates.
+
+#### (b)
+$f(n) \in O(g(n))$ since the $n^2$ term dominates.
+
+#### (c)
+$f(n) \in O(g(n))$ since $\sqrt{n}$ dominates $\log{n}$.
+
+#### (d)
+$g(n) \in O(f(n))$ since $n$ dominates $\sqrt{n}$.
+
+#### (e)
+$g(n) \in O(f(n))$ since $\log^2{n}$ dominates $\log{n}$.
+
+#### (f)
+$f(n) \in O(g(n))$ since $n^2$ dominates $n \log{n}$.
+
+### 2-11)
+To prove $n^2 \in O(2^n)$, it suffices to show that $2^n$ dominates $n^2$.
+Consider
+$$\lim_{n \to \infty} \frac{n^2}{2^n}$$
+We prove that this limit equals $0$ by applying L'Hôpital's rule twice:
+\begin{align*}
+\lim_{n \to \infty} \frac{n^2}{2^n} &= \lim_{n \to \infty}
+\frac{\frac{d}{dn}(n^2)}{\frac{d}{dn}(2^n)} \\
+&= \lim_{n \to \infty} \frac{2n}{2^n \ln{2}} \\
+&= \lim_{n \to \infty} \frac{\frac{d}{dn}(2n)}{ \ln{2}\frac{d}{dn}(2^n)} \\
+&= \lim_{n \to \infty} \frac{2}{ \ln^2{2} \cdot 2^n} \\
+&= \frac{2}{\ln^2{2}}\lim_{n \to \infty} \frac{1}{2^n} \\
+&= 0
+\end{align*}
+\begin{flushright} \rule{1.2ex}{1.2ex} \end{flushright}
