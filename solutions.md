@@ -423,11 +423,249 @@ $$\lim_{n \to \infty} \frac{n^2}{2^n}$$
 We prove that this limit equals $0$ by applying L'Hôpital's rule twice:
 \begin{align*}
 \lim_{n \to \infty} \frac{n^2}{2^n} &= \lim_{n \to \infty}
-\frac{\frac{d}{dn}(n^2)}{\frac{d}{dn}(2^n)} \\
+\frac{\frac{d}{dn}n^2}{\frac{d}{dn}2^n} \\
 &= \lim_{n \to \infty} \frac{2n}{2^n \ln{2}} \\
-&= \lim_{n \to \infty} \frac{\frac{d}{dn}(2n)}{ \ln{2}\frac{d}{dn}(2^n)} \\
+&= \lim_{n \to \infty} \frac{\frac{d}{dn}2n}{ \ln{2}\frac{d}{dn}2^n} \\
 &= \lim_{n \to \infty} \frac{2}{ \ln^2{2} \cdot 2^n} \\
 &= \frac{2}{\ln^2{2}}\lim_{n \to \infty} \frac{1}{2^n} \\
 &= 0
 \end{align*}
 \begin{flushright} \rule{1.2ex}{1.2ex} \end{flushright}
+
+### 2-13)
+Let $f_1(n) \in O(g_1(n))$ and $f_2(n) \in O(g_2(n))$. Then by definition
+$\exists\; c_1, c_2, n_1, n_2$ such that $$c_1g_1(n) \geq f_1(n) \;\forall\; n \geq n_1$$
+and $$c_2g_2(n) \geq f_2(n) \;\forall\; n \geq n_2$$
+Now consider $f_1(n) + f_2(n)$. Combining inequalities gives us
+$$ c_1g_1(n) + c_2g_2(n) \geq f_1(n) + f_2(n) \;\forall\; n \geq
+\operatorname{max}(n_1, n_2)$$
+Finally, taking $c_3 = \operatorname{max}(c_1, c_2)$ and $n_3 = \operatorname{max}(n_1,n_2)$
+yields
+\begin{align*}
+& c_3(g_1(n) + g_2(n)) \geq f_1(n) + f_2(n) \;\forall\; n \geq n_3 \\
+& \Rightarrow f_1(n) + f_2(n) \in O(g_1(n) + g_2(n))
+\end{align*}
+\begin{flushright} \rule{1.2ex}{1.2ex} \end{flushright}
+
+### 2-15)
+Let $f_1(n) \in O(g_1(n))$ and $f_2(n) \in O(g_2(n))$. Then by definition
+$\exists\; c_1, c_2, n_1, n_2$ such that $$c_1g_1(n) \geq f_1(n) \;\forall\; n \geq n_1$$
+and $$c_2g_2(n) \geq f_2(n) \;\forall\; n \geq n_2$$
+Now consider $f_1(n) \cdot f_2(n)$. Combining inequalities gives us
+$$ c_1g_1(n) \cdot c_2g_2(n) \geq f_1(n) \cdot f_2(n) \;\forall\; n \geq
+\operatorname{max}(n_1, n_2)$$
+Finally, taking $c_3 = \operatorname{max}(c_1, c_2)$ and $n_3 = \operatorname{max}(n_1,n_2)$
+yields
+\begin{align*}
+& c_3(g_1(n) \cdot g_2(n)) \geq f_1(n) \cdot f_2(n) \;\forall\; n \geq n_3 \\
+& \Rightarrow f_1(n) \cdot f_2(n) \in O(g_1(n) \cdot g_2(n))
+\end{align*}
+\begin{flushright} \rule{1.2ex}{1.2ex} \end{flushright}
+
+### 2-17)
+We need to show that $\exists\; c_1, c_2, n0$ such that
+$$(n+a)^b \leq c_1n^b \quad \forall\; n \geq n_0$$
+and
+$$(n+a)^b \geq c_2n^b \quad \forall\; n \geq n_0$$
+
+Let $c_1 = 2^b$. Then for all $n \geq 2|a| = n_0$,
+\begin{align*}
+& n+a \leq 2n \\
+\Rightarrow\quad& (n+a)^b \leq 2^bn^b
+\end{align*}
+
+Since we've fixed $n_0 = |a|$, we need to find $c_2$ such that
+$$(n+a)^b \geq c_2n^b \qquad\forall\; n \geq |a|$$
+
+Let $c_2 = 2^{-b}$. Then for all $n \geq 2|a| = n_0$,
+\begin{align*}
+& n+a \geq 2^{-1}n \\
+\Rightarrow\quad& (n+a)^b \geq 2^{-b}n^b
+\end{align*}
+
+\begin{flushright} \rule{1.2ex}{1.2ex} \end{flushright}
+
+### 2-19)
+
+- $(1/3)^n$
+- $6$
+- $\log\log{n}$
+- $\ln{n}$ same
+- $\log{n}$ same
+- $(\log{n})^2$
+- $n^{\frac{1}{3}} + \log{n}$
+- $\sqrt{n}$
+- $\frac{n}{\log{n}}$
+- $n$
+- $n \log{n}$
+- $n^2$
+- $n^2 + \log{n}$
+- $n^3$
+- $n - n^3 + 7n^5$
+- $(3/2)^n$
+- $2^n$
+- $n!$
+
+### 2-21)
+#### (a)
+True
+
+#### (b)
+False
+
+#### (c)
+True
+
+#### (d)
+False
+
+#### (e)
+True
+
+#### (f)
+True
+
+#### (g)
+False
+
+### 2-23)
+#### (a)
+Yes, worst-case analysis says nothing about how long the algorithm might take
+on non-worst-case inputs.
+
+#### (b)
+Yes, $O(n^2)$ is only an upper bound. It is not necessarily tight.
+
+#### (c)
+Yes, the $\Theta(n^2)$ only indicates a tight bound for worst-case inputs.
+
+#### (d)
+No, the algorithm must take $\Theta(n^2)$ time on at least one input.
+
+#### (e)
+Yes, because $n^2$ dominates $n \log_2{n}$ in the odd $n$ case and thus both cases
+are $\Theta(n^2)$.
+
+### 2-25)
+#### (a)
+$g(n) = \log{n}$, since partial sums of the harmonic series can be expressed as
+a function whose dominant term is $\ln{n}$.
+
+#### (b)
+$g(n) = n$
+
+#### (c)
+$n\log{n}$
+
+#### (d)
+$g(n) = n\log{n}$, since Stirling's approximation states that $log_2{n!} =
+n\log{n} - n\log{e} + \Theta(\log{n})$, and $l\log{n}$ is the dominant term.
+
+### 2-27)
+1. $f_2(n) \in O(\sqrt{n} \log{n})$
+2. $f_1(n) \in O(n)$
+3. $f_3(n) \in O(n \sqrt{\log{n}})$
+4. $f_4(n) \in O(n^\frac{3}{2})$
+
+### 2-29)
+\begin{align*}
+\sum_{i=1}^n 3^i
+&= \frac{3^{n+1} - 1}{2} - 1 \quad \\
+&= \frac{1}{2} \left( 3^{n+1} - 3 \right) \in \Theta(3^{n+1}) \\
+&= 3\left(\frac{1}{6} \left( 3^{n} - 3 \right)\right) \in \Theta(3^{n}) \\
+&= 3^2\left(\frac{1}{18} \left( 3^{n-1} - 3 \right)\right) \in \Theta(3^{n-1}) \\
+\end{align*}
+
+So all of \textbf{(a)}, \textbf{(b)}, and \textbf{(c)} are true.
+
+### 2-31)
+#### (a)
+$A \in O(B), o(B)$ since $2^n$ dominates all polynomial functions of $n$.
+
+#### (b)
+$A \in O(B), o(B)$ since $\sqrt{n}$ dominates all polylogarithmic functions of
+$n$.
+
+#### (c)
+None of the relations hold since $B$ oscillates between $n$ and $1/n$.
+
+#### (d)
+$A \in O(B), o(B)$ since $100^n = (10^2)^n = (10^n)^2$ which dominates $10^n$.
+
+#### (e)
+$$\lim_{n \to \infty} \frac{n^{\lg{n}}}{(\lg{n})^n} = 0 \Rightarrow A \in O(B),
+o(B)$$
+
+#### (f)
+Stirling's approximation gives $$\ln{n!} = n\ln{n} - n + \Theta(\ln{n})$$
+so $A \in O(B), \Omega(B), \Theta(B)$.
+
+### 2-33)
+Each number $T_{ij}$ in column $j$ of row $i$ has three children. It contributes
+its value to each of them. Thus $T_{ij}$ is counted three times in the sum of
+$T_{i+1,j}$. Summing over $j$, we obtain
+\begin{align*}
+&S(i) = \sum_{j}T_{ij} \\
+&= 3 \sum_{j}T_{i-1,j} \\
+&= 3 \cdot S(i-1) \\
+&= 3 \cdot 3 \cdot S(i-2) \\
+&= 3 \cdot 3 \cdot \dots S(0) \\
+&= 3^i
+\end{align*}
+for $i \geq 0$.
+
+### 2-35)
+#### (a)
+$$T(n) = \sum_{i=1}^n\sum_{j=i}^{2i}1$$
+
+#### (b)
+\begin{align*}
+&T(n) = \sum_{i=1}^n\sum_{j=1}^{i+1}1 \\
+&= \sum_{i=1}^n i+1 \\
+&= n + \sum_{i=1}^n i \\
+&= n + \frac{n(n+1)}{2}
+\end{align*}
+
+### 2-37)
+Multiplication in this fashion has worst-case time complexity $O(nb^n)$, since a
+base-$b$, $n$-digit number can represent values up to $b^n - 1$. The product
+$(b^n - 1)^2$ would require adding two $n$-bit values $b^n - 1$ times, for a
+total of $n(b^n - 1) \in O(nb^n)$ addition operations. Note that this ignores
+carries, which would only contribute up to an additional factor of $b$,
+something which may be ignored in the Big-Oh representation due to it already
+being exponential in $n$.
+
+### 2-39)
+#### (a)
+\begin{align*}
+a^{\log_a{x} + \log_{a}y} &= a^{\log_a{x}}a^{\log_a{y}} \\
+&= xy \\
+\Rightarrow \log_a{(xy)} &= \log_a{a^{(\log_a{x} + \log_{a}y)}} \\
+&= \log_a{x} + \log_a{y}
+\end{align*}
+
+#### (b)
+\begin{align*}
+\log_a{x^y} &= \log_a{\left(\prod_{1}^y x\right)} \\
+&= \sum_{1}^y \log_a{x} \\
+&= y\log_a{x}
+\end{align*}
+
+#### (c)
+\begin{align*}
+a^{\log_a{x}} &= b^{\log_b{x}} \\
+\Rightarrow \log_b{a^{\log_a{x}}} &= \log_a{x} \cdot \log_b{a} \\
+&= \log_b{b^{\log_b{x}}} \\
+&= \log_b{x} \\
+\Rightarrow \log_a{x} &= \frac{\log_b{x}}{\log_b{a}}
+\end{align*}
+
+#### (d)
+\begin{align*}
+\log_b{y} &= \frac{\log_x{y}}{\log_x{b}} \\
+\Rightarrow x^{\log_b{y}} &= x^{\frac{\log_x{y}}{\log_x{b}}} \\
+&= y^\frac{1}{\log_x{b}} \\
+&= y^{\log_b{x}}
+\end{align*}
+since $\log_{b}x = \frac{1}{\log_x{b}}$ is a special case of the usual
+log base swap formula.
