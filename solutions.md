@@ -669,3 +669,82 @@ a^{\log_a{x}} &= b^{\log_b{x}} \\
 \end{align*}
 since $\log_{b}x = \frac{1}{\log_x{b}}$ is a special case of the usual
 log base swap formula.
+
+### 2-41)
+$k$ bits can represent $2^k$ different values, or integers $0 \leq n \leq
+2^k-1$. We need to show that $k = \lfloor \lg_2{n} \rfloor + 1$.
+
+For the case $k=1$ it is easily verified that the above holds.
+
+Now considering only the largest possible value of $n$, $n=2^k-1$,
+representable by $k > 1$ bits and taking logs, we obtain $\lg_2{n} =
+\lg_2{(2^k-1)}$. But $\lg_2{2^k} = k$, and $\lg_2{2^{k-1}} = k-1$, so
+\begin{align*}
+& k-1 < \lg_2{(2^k-1)} < k \\
+&\Rightarrow \lfloor \lg_2{(2^k-1)} \rfloor = k-1 \\
+&\Rightarrow \lfloor \lg_2{(2^k-1)} \rfloor + 1 = k \\
+&\Rightarrow \lfloor \lg_2{n} \rfloor + 1 = k
+\end{align*}
+\begin{flushright} \rule{1.2ex}{1.2ex} \end{flushright}
+
+### 2-43)
+Assumptions: we don't get to choose $k$ (otherwise we could trivally select an
+empty subset), $0 \leq k \leq n$, we have access to random numbers, and we
+don't need to make our choices until we've made our pass over the entire
+subset.
+
+For each number $s$ in $S$ we may generate a random number $r$ and store $(r,
+s)$ in a heap keyed on $r$. Once we've seen all of $S$, pop the top $k$
+values from the heap.
+
+### 2-45)
+Let's ignore the assignment performed at the beginning. Assume a uniform
+random distribution on $A[i]$ and on the location of $\min{A[i]}$.
+
+The probability that a swap is made at position $i$, $p_i$, is the probability
+that $A[i]$ is the minimum amongst $A[0 \dots i]$. Given our uniform
+distribution, $p_i = 1/(i+1)$. The expected value of the number of swaps made
+over all of $A$ is then
+\begin{align*}
+\sum_{i=1}^n p_i &= \sum_{i=1}^n \frac{1}{i+1} \\
+&= \left(\sum_{i=2}^{n+1} \frac{1}{i} \right) \\
+&\sim \ln{n}
+\end{align*}
+
+### 2-47)
+Take 1 coin from bag 1, 2 coins from bag 2, \dots, 10 coins from bag 10, and
+place the chosen coins all in one bag. Weigh that bag. The scale will report a
+weight of $550-i$, where $i$ is the bag with the false coins.
+
+### 2-49)
+Assume companies merge as pairs. Then the number of ways for them to merge
+is the same as the number of binary trees with $n$ leaves.
+
+We have $\binom{n}{2}$ choices for the first merge, $\binom{n-1}{2}$ for the
+second, etc. This results in a total number of ways to merge $T(n)$ given by
+\begin{align*}
+T(n) &= \prod_{i=0}^{n-2} \binom{n-i}{2} \\
+&= \prod_{i=0}^{n-2} \frac{(n-i)!}{2(n-i-2)!} \\
+&= \frac{n!(n-1)!}{2^{n-1}} \\
+\end{align*}
+
+### 2-51)
+Label each pirate $p_i, 1 \leq i \leq 6$ in order of increasing seniority.
+
+Consider the terminal state where only two pirates remain, and the more senior
+of them, $p_5$, proposes that he receive all $300, and then secures 50% of the
+vote with just his own. Now step backward to the state where three pirates
+remain. Knowing that $p_6$ will receive $0 if the voting goes another round,
+$p_4$ can offer $p_6$ $1 for his vote, securing himself $299. Now step backward
+again, and repeat the process. Here $p_3$ can offer $p_5$ $1. Back another
+step, and $p_2$ can offer $p_4$ and $p_6$ $1 each. Back one last time, and
+$p_1$ can offer $p_3$ and $p_5$ $1 each. The final division is then $p_1:
+\$298$, $p_3: \$1$, $p_5: \$1$, and $0 for the rest.
+
+### P2-1)
+TODO
+See $\texttt{src/p2-1.py}$.
+
+### P2-3)
+TODO
+See $\texttt{src/p2-3.py}$.
