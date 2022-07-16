@@ -4,7 +4,7 @@ all:
 
 test:
 	@pyright src/
-	@for f in src/*.py; do python "$$f"; done
+	@python -m unittest test
 
 clean:
 	@rm -f solutions.pdf

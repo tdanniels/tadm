@@ -85,7 +85,6 @@ def parse(lines: deque[str]) -> list[Vote]:
     return votes
 
 
-# For online judge.
 def input():
     lines = deque()
     for line in map(str.rstrip, sys.stdin):
@@ -93,44 +92,5 @@ def input():
     print("\n".join(solve(parse(lines))))
 
 
-# For local testing.
 if __name__ == "__main__":
-    inp = deque(
-        [
-            "1",
-            "",
-            "3",
-            "John Doe",
-            "Jane Smith",
-            "Sirhan Sirhan",
-            "1 2 3",
-            "2 1 3",
-            "2 3 1",
-            "1 2 3",
-            "3 1 2",
-        ]
-    )
-    assert solve(parse(inp)) == ["John Doe"]
-
-    inp = deque(
-        [
-            "2",
-            "",
-            "3",
-            "John Doe",
-            "Jane Smith",
-            "Sirhan Sirhan",
-            "1 2 3",
-            "2 1 3",
-            "2 3 1",
-            "1 2 3",
-            "3 1 2",
-            "",
-            "2",
-            "a",
-            "b",
-            "1 2",
-            "2 1",
-        ]
-    )
-    assert solve(parse(inp)) == ["John Doe", "", "a", "b"]
+    input()
