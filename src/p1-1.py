@@ -1,30 +1,35 @@
+"""UVA Judge 100"""
+
+import functools
 import sys
 
 
+@functools.cache
 def collatz(n):
-    i = 0
-    while True:
-        i += 1
-        if n == 1:
-            return i
-        if n % 2 == 1:
-            n = 3 * n + 1
-        else:
-            n = n // 2
+    if n == 1:
+        return 1
+    if n % 2 == 1:
+        n = 3 * n + 1
+    else:
+        n = n // 2
+
+    i = 1 + collatz(n)
+
+    return i
 
 
 def solve(i, j):
     max_cyc = 0
-    i, j = min(i, j), max(i, j)
-    for k in range(i, j + 1):
+    for k in range(min(i, j), max(i, j) + 1):
         max_cyc = max(max_cyc, collatz(k))
     return "{} {} {}".format(i, j, max_cyc)
 
 
-def input():
-    for line in map(str.rstrip, sys.stdin):
-        print(solve(*map(int, line.split(" "))))
+def main():
+    for line in sys.stdin:
+        i, j = map(int, line.split())
+        print(solve(i, j))
 
 
 if __name__ == "__main__":
-    input()
+    main()

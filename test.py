@@ -65,6 +65,7 @@ class TestP1_1(unittest.TestCase):
         self.assertEqual(p1_1.solve(100, 200), "100 200 125")
         self.assertEqual(p1_1.solve(201, 210), "201 210 89")
         self.assertEqual(p1_1.solve(900, 1000), "900 1000 174")
+        self.assertEqual(p1_1.solve(1000, 900), "1000 900 174")
         # Worst case input:
         self.assertEqual(p1_1.solve(1, 9999), "1 9999 262")
 

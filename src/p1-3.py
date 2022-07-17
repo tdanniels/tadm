@@ -1,3 +1,5 @@
+"""UVA Judge 10142"""
+
 from collections import deque
 from dataclasses import dataclass
 import sys
@@ -6,7 +8,7 @@ import sys
 @dataclass
 class Vote:
     candidates: list[str]
-    ballots: list[list[int]]
+    ballots: list[deque[int]]
 
 
 def lowest_vote_count(pile, eliminated):
@@ -22,8 +24,8 @@ def lowest_vote_count(pile, eliminated):
 
 
 def solve_inner(vote: Vote):
-    output = []
-    eliminated = []
+    eliminated = set()
+    nballots = len(vote.ballots)
     # pile[i] = a list of ballots that currently rank candidate i first.
     pile = [[] for _ in range(len(vote.candidates))]
     for b in vote.ballots:
@@ -31,26 +33,33 @@ def solve_inner(vote: Vote):
 
     while True:
         for i, p in enumerate(pile):
-            if len(p) > len(vote.candidates) / 2:
-                output.append(vote.candidates[i])
-                return output
+            if len(p) > nballots / 2:
+                return [vote.candidates[i]]
         # No winner yet. Move the lowest ranked candidates' ballots
         # to the ballots' next choices and eliminate the losers (!).
         lvc = lowest_vote_count(pile, eliminated)
-        for i, p in enumerate(pile):
+        # All tied?
+        if all(
+            map(
+                lambda p: len(p[1]) == lvc,
+                filter(lambda i: i[0] not in eliminated, enumerate(pile)),
+            )
+        ):
+            return [
+                vote.candidates[i]
+                for i, _ in enumerate(vote.candidates)
+                if i not in eliminated
+            ]
+        for i, p in filter(lambda i: i[0] not in eliminated, enumerate(pile)):
             if len(p) == lvc:
-                eliminated.append(i)
-        if len(eliminated) == len(vote.candidates):
-            output.extend(vote.candidates)
-            return output
+                eliminated.add(i)
         # Copy ballots from losers.
-        for i, p in enumerate(pile):
-            if i in eliminated:
-                for b in p:
-                    while b[0] in eliminated:
-                        b = b[1:]
-                    if len(b) > 0:
-                        pile[b[0]].append(b)
+        for i, p in filter(lambda i: i[0] in eliminated, enumerate(pile)):
+            for b in p:
+                while b[0] in eliminated:
+                    b.popleft()
+                if len(b) > 0:
+                    pile[b[0]].append(b)
         # Delete losers' ballots.
         for l in eliminated:
             pile[l].clear()
@@ -79,13 +88,13 @@ def parse(lines: deque[str]) -> list[Vote]:
             ballot = lines.popleft()
             if ballot == "":
                 break
-            ballots.append(list(map(lambda x: int(x) - 1, ballot.split(" "))))
+            ballots.append(deque(map(lambda x: int(x) - 1, ballot.split())))
         votes.append(Vote(candidates, ballots))
         cases -= 1
     return votes
 
 
-def input():
+def main():
     lines = deque()
     for line in map(str.rstrip, sys.stdin):
         lines.append(line)
@@ -93,4 +102,4 @@ def input():
 
 
 if __name__ == "__main__":
-    input()
+    main()
