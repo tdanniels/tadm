@@ -312,9 +312,11 @@ same amount of road in the horizontal direction, for a total of $2,000,914
 Looking it up, it seems I'm under by a factor of about 4.
 
 ### P1-1)
+UVA Judge 100.
 See $\texttt{src/p1-1.py}$.
 
 ### P1-3)
+UVA Judge 10142.
 See $\texttt{src/p1-3.py}$.
 
 ## Chapter 1
@@ -741,10 +743,10 @@ step, and $p_2$ can offer $p_4$ and $p_6$ $1 each. Back one last time, and
 $p_1$ can offer $p_3$ and $p_5$ $1 each. The final division is then $p_1:
 \$298$, $p_3: \$1$, $p_5: \$1$, and $0 for the rest.
 
-### P2-1)
-TODO
-See $\texttt{src/p2-1.py}$.
+### L2-1)
+https://leetcode.com/problems/remove-k-digits/
+See $\texttt{src/l2-1.py}$.
 
-### P2-3)
-TODO
-See $\texttt{src/p2-3.py}$.
+### L2-3)
+https://leetcode.com/problems/4sum/
+See $\texttt{src/l2-3.py}$.
