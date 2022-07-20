@@ -15,25 +15,25 @@
 
 class Solution:
     def removeKdigits(self, num: str, k: int) -> str:
-        num = list(num)
+        numl = list(num)
         i = 0
         while k > 0:
-            if i == len(num) - 1 or num[i] > num[i + 1]:
-                num.pop(i)
+            if i == len(numl) - 1 or numl[i] > numl[i + 1]:
+                numl.pop(i)
                 i = max(0, i - 1)
                 k -= 1
             else:
                 i += 1
 
-        if len(num) == 0:
-            num = ["0"]
+        if len(numl) == 0:
+            numl = ["0"]
         else:
             i = 0
-            while num[i] == "0" and i < len(num) - 1:
+            while numl[i] == "0" and i < len(numl) - 1:
                 i += 1
-            num = num[i:]
+            numl = numl[i:]
 
-        return "".join(num)
+        return "".join(numl)
 
 
 if __name__ == "__main__":

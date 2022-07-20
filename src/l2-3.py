@@ -11,29 +11,29 @@ class Solution:
                     d[v] += 1
             except KeyError:
                 d[v] = 1
-        nums = [[v] * d[v] for v in d]
-        nums = [v for vs in nums for v in vs]
+        numsd = [[v] * d[v] for v in d]
+        numsd = [v for vs in numsd for v in vs]
 
         pair_table = dict()
-        for i in range(len(nums)):
-            for j in range(i + 1, len(nums)):
+        for i in range(len(numsd)):
+            for j in range(i + 1, len(numsd)):
                 try:
-                    pair_table[nums[i] + nums[j]].append((i, j))
+                    pair_table[numsd[i] + numsd[j]].append((i, j))
                 except KeyError:
-                    pair_table[nums[i] + nums[j]] = [(i, j)]
+                    pair_table[numsd[i] + numsd[j]] = [(i, j)]
 
         out = set()
-        for k in range(len(nums)):
-            nk = nums[k]
-            for l in range(k + 1, len(nums)):
+        for k in range(len(numsd)):
+            nk = numsd[k]
+            for l in range(k + 1, len(numsd)):
                 try:
-                    x = pair_table[target - (nums[k] + nums[l])]
+                    x = pair_table[target - (numsd[k] + numsd[l])]
                 except KeyError:
                     continue
-                nl = nums[l]
+                nl = numsd[l]
                 for i, j in x:
                     if i != k and i != l and j != k and j != l:
-                        ns = [nums[i], nums[j], nk, nl]
+                        ns = [numsd[i], numsd[j], nk, nl]
                         ns.sort()
                         out.add(tuple(ns))
 
