@@ -7,6 +7,8 @@ import unittest
 q1_27 = importlib.import_module("src.1-27")
 p1_1 = importlib.import_module("src.p1-1")
 p1_3 = importlib.import_module("src.p1-3")
+l2_1 = importlib.import_module("src.l2-1")
+l2_3 = importlib.import_module("src.l2-3")
 
 
 class Test1_27(unittest.TestCase):
@@ -111,6 +113,40 @@ class TestP1_3(unittest.TestCase):
             ]
         )
         self.assertEqual(p1_3.solve(p1_3.parse(inp)), ["John Doe", "", "a", "b"])
+
+
+class TestL2_1(unittest.TestCase):
+    def test(self):
+        s = l2_1.Solution()
+
+        for d, k, soln in [
+            ("52660469", 2, "260469"),
+            ("1234", 3, "1"),
+            ("1432219", 3, "1219"),
+            ("111999", 3, "111"),
+            ("1110009", 3, "9"),
+            ("102030", 3, "0"),
+            ("0", 1, "0"),
+            ("12343475437852347858912364501948465", 10, "1232347858912364501948465"),
+            (
+                "949463029467549391366849402029384756574651343557689700",
+                15,
+                "21366849402029384756574651343557689700",
+            ),
+            ("1" * 5 * 10**3 + "0" * 5 * 10**3, 10**4, "0"),
+        ]:
+            rkd = s.removeKdigits(d, k)
+            self.assertEqual(rkd, soln)
+
+
+class TestL2_3(unittest.TestCase):
+    def test(self):
+        s = l2_3.Solution()
+        self.assertEqual(
+            sorted([sorted(l) for l in s.fourSum([1, 0, -1, 0, -2, 2], 0)]),
+            sorted(sorted(l) for l in [[-2, -1, 1, 2], [-2, 0, 0, 2], [-1, 0, 0, 1]]),
+        )
+        self.assertEqual(s.fourSum([2, 2, 2, 2, 2], 8), [[2, 2, 2, 2]])
 
 
 if __name__ == "__main__":

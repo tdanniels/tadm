@@ -38,11 +38,3 @@ class Solution:
                         out.add(tuple(ns))
 
         return [list(t) for t in out]
-
-
-if __name__ == "__main__":
-    s = Solution()
-    assert sorted([sorted(l) for l in s.fourSum([1, 0, -1, 0, -2, 2], 0)]) == sorted(
-        sorted(l) for l in [[-2, -1, 1, 2], [-2, 0, 0, 2], [-1, 0, 0, 1]]
-    )
-    assert s.fourSum([2, 2, 2, 2, 2], 8) == [[2, 2, 2, 2]]

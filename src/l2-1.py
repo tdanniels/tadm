@@ -13,6 +13,7 @@
 # consideration. This is similar to my approach, except that they manage to
 # always get O(1) list.pop because of the stack.
 
+
 class Solution:
     def removeKdigits(self, num: str, k: int) -> str:
         numl = list(num)
@@ -34,26 +35,3 @@ class Solution:
             numl = numl[i:]
 
         return "".join(numl)
-
-
-if __name__ == "__main__":
-    s = Solution()
-
-    for d, k, soln in [
-        ("52660469", 2, "260469"),
-        ("1234", 3, "1"),
-        ("1432219", 3, "1219"),
-        ("111999", 3, "111"),
-        ("1110009", 3, "9"),
-        ("102030", 3, "0"),
-        ("0", 1, "0"),
-        ("12343475437852347858912364501948465", 10, "1232347858912364501948465"),
-        (
-            "949463029467549391366849402029384756574651343557689700",
-            15,
-            "21366849402029384756574651343557689700",
-        ),
-        ("1" * 5 * 10**4 + "0" * 5 * 10**4, 10**5, "0"),
-    ]:
-        rkd = s.removeKdigits(d, k)
-        assert rkd == soln
