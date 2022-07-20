@@ -745,8 +745,10 @@ $p_1$ can offer $p_3$ and $p_5$ $1 each. The final division is then $p_1:
 
 ### L2-1)
 https://leetcode.com/problems/remove-k-digits/
+
 See $\texttt{src/l2-1.py}$.
 
 ### L2-3)
 https://leetcode.com/problems/4sum/
+
 See $\texttt{src/l2-3.py}$.
