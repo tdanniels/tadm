@@ -5,7 +5,7 @@ all:
 .PHONY: test
 test:
 	@pyright src/
-	@python -m unittest test
+	@python -m unittest -b test
 
 clean:
 	@rm -f solutions.pdf

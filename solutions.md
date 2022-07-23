@@ -752,3 +752,45 @@ See $\texttt{src/l2-1.py}$.
 https://leetcode.com/problems/4sum/
 
 See $\texttt{src/l2-3.py}$.
+
+### 3-1)
+A stack is the appropriate data structure for this problem.
+We give an algorithm in Python below.
+```{.python include=src/3-1.py snippet=balanced-parens}
+```
+
+### 3-3)
+#### (a)
+Consider the following sequence of insertions and deletions:
+
+1. Insert 1025 elements (length = 1025, capacity = 2048)
+2. Delete two elements (length = 1023, capacity = 1024)
+3. Insert two elements (reallocate and copy; length = 1025, capacity = 2048)
+4. Delete two elements (length = 1023, capacity = 1024)
+5. Insert two elements (reallocate and copy; length = 1025, capacity = 2048)
+
+etc.
+
+With this access pattern, we must copy $\Theta(n)$ elements for every two deletions and
+insertions.
+
+#### (b)
+Consider a similar underflow strategy, except that instead of shrinking the array
+at $< 1/2$ capacity, we shrink it at $< 1/4$. This prevents this oscillatory
+behaviour we saw with the previous strategy, since it takes $O(n)$ deletions
+(roughly $n/2$) instead of $O(1)$ deletions to trigger a shrink operation. For this
+reason the array has constant amortized cost per deletion.
+
+### 3-5)
+#### (a)
+The overhead fraction is $4 / (2 * 4 + 4 + 4) = 1/4$.
+
+#### (b)
+The overhead fraction depends on how full the tree is.
+
+For a degenerate binary tree (linked list) with $n$ nodes, the fraction would
+be $4/(4 + 4(n-1)) = 1/n$.
+
+For a full binary tree (with $n = 2^k - 1$ nodes), the fraction would be
+$$4(\lfloor n/2 \rfloor + 1) / (4n) \approx 1/2$$
+Thus the overhead fraction $f(n)$ is bounded as $$1/n \leq f(n) \lessapprox 1/2$$
