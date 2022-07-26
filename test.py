@@ -4,13 +4,13 @@ import importlib
 import unittest
 
 
-
 p1_1 = importlib.import_module("src.p1-1")
 p1_3 = importlib.import_module("src.p1-3")
 l2_1 = importlib.import_module("src.l2-1")
 l2_3 = importlib.import_module("src.l2-3")
 q1_27 = importlib.import_module("src.1-27")
 q3_1 = importlib.import_module("src.3-1")
+q3_9 = importlib.import_module("src.3-9")
 
 
 class Test1_27(unittest.TestCase):
@@ -62,6 +62,7 @@ class Test1_27(unittest.TestCase):
             )
         )
 
+
 class Test3_1(unittest.TestCase):
     def test(self):
         self.assertTrue(q3_1.balanced_parens("((())())()"))
@@ -70,6 +71,12 @@ class Test3_1(unittest.TestCase):
         self.assertFalse(q3_1.balanced_parens("())"))
         self.assertFalse(q3_1.balanced_parens("((("))
         self.assertFalse(q3_1.balanced_parens("()(()"))
+
+
+class Test3_9(unittest.TestCase):
+    def test(self):
+        # TODO
+        pass
 
 
 class TestP1_1(unittest.TestCase):

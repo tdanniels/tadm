@@ -775,11 +775,12 @@ With this access pattern, we must copy $\Theta(n)$ elements for every two deleti
 insertions.
 
 #### (b)
-Consider a similar underflow strategy, except that instead of shrinking the array
-at $< 1/2$ capacity, we shrink it at $< 1/4$. This prevents this oscillatory
-behaviour we saw with the previous strategy, since it takes $O(n)$ deletions
-(roughly $n/2$) instead of $O(1)$ deletions to trigger a shrink operation. For this
-reason the array has constant amortized cost per deletion.
+Consider a similar underflow strategy, except that instead of shrinking the
+array at $< 1/2$ capacity, we shrink it at $< 1/4$. Note that we still shrink
+it down to half its capacity. This prevents this oscillatory behaviour we saw
+with the previous strategy, since it takes $O(n)$ deletions (roughly $n/2$)
+instead of $O(1)$ deletions to trigger a shrink operation. For this reason the
+array has constant amortized cost per deletion.
 
 ### 3-5)
 #### (a)
@@ -794,3 +795,125 @@ be $4/(4 + 4(n-1)) = 1/n$.
 For a full binary tree (with $n = 2^k - 1$ nodes), the fraction would be
 $$4(\lfloor n/2 \rfloor + 1) / (4n) \approx 1/2$$
 Thus the overhead fraction $f(n)$ is bounded as $$1/n \leq f(n) \lessapprox 1/2$$
+
+### 3-7)
+Allocate two memory locations to hold the minimum and maximum. Every time after
+an item is inserted, check if the new item is less than the minimum or greater
+than the maximum, and update if necessary. Whenever an item is deleted, if it's
+the minimum or maximum element, update the minimum or maximum element with the
+deleted item's successor.
+
+### 3-9)
+Since every key in $S_1$ is smaller than any key in $S_2$, we could just make
+the root of $S_1$ the left child of the smallest item in $S_2$. However, this
+would result in a poorly balanced tree. Better would be to make $S_1$ the left
+subtree of a new tree, and $S_2$ the right subtree of the same new tree. But
+how to choose the root of the new tree? We can take either the maximum element
+of $S_1$ or the minimum element of $S_2$, detach it from its parent, and make
+it the root of the new tree.
+
+An implementation is given below.
+```{.python include=src/3-9.py snippet=concat-binary-trees}
+```
+
+### 3-11)
+#### (a)
+This can be accomplished with a 2D array indexed by $i$ and $j$ that stores the
+minimum between $x_i$ and $x_j$. The array's entries are precomputed in $O(n^2)$
+total time, which is required to initialize the array anyway.
+
+#### (b)
+Consider a complete binary tree that stores all $n$ values in its leaf nodes.
+If $n = 2^k$, no modifications are required, otherwise we can pad out the tree
+with infinite-valued nodes, which have no effect on $\min$ queries. The tree's
+internal nodes store the minimum values of all nodes beneath them. A tree of
+this description would require $\Omega(n)$ space: $n$ leaf nodes and $n-1$
+internal nodes.
+
+Queries are answered recursively. Given a sequence $X = x_1, \dots, x_n$ and a tree
+$T$ as described above, consider the query $\min_{i \dots j}{X}$. We answer the
+query recursively as follows.
+
+Starting at the root, we have $\min_{1 \dots n}X$. If $i = 1$ and $j = n$, we
+are done. Otherwise, the interval $[i, j]$ can be classified as either (a)
+being contained entirely within the left subtree of $T$, (b) contained entirely
+within the right subtree of $T$, or (c) contained within the union of the left
+and right subtrees. In the case of either (a) or (b), we recursive into either
+the left or right subtree, respectively. In the case of (c), we recurse into
+both. The goal is to find vertices which exactly cover $[i, j]$, and take the
+minimum over their union in order to obtain $\min_{i \dots j}{X}$. It can be
+shown that, for each level of the tree, we will only need to visit at most 4
+nodes. Since the height of the tree is $O(\log{n})$, then the query complexity
+is also $O(\log{n})$. Our proof proceeds by induction.
+
+Base case: at the root node, we visit only one node (the root itself), which
+is fewer than 4 nodes.
+
+Assumptions: we visit at most 4 vertices at the $k$th level of the tree.
+
+Inductive step: consider a recursive descent from the $k$th level of the tree.
+Our goal is to find nodes that cover $[s, t]$. By assumption, we may visit at
+most 4 nodes on this level. If we have only visited two nodes on this level,
+then we can visit no more than 4 nodes on the next level, since each node
+generates at most two recursive calls. Otherwise, suppose we have visted 3 or 4
+nodes at this level. Consider the middle 1 or 2 vertices of the 3 or 4,
+respectively. We know that the outer nodes of the 3 or 4 must cover the
+endpoints $s$ and $t$, therefore the middle 1 or 2 vertices must cover the
+entire contiguous range not covered by the outer vertices. Thus, we will not
+need to recurse into the middle 1 or 2 nodes, and only the outer nodes will
+potentially recurse into the $k+1$th level up to twice each, for a total of 4
+nodes visited on level $k+1$ as well.
+\begin{flushright} \rule{1.2ex}{1.2ex} \end{flushright}
+
+### 3-13)
+We use a similar tree structure to the one described in 3-11 (b). $A[1..n]$
+stores the leaf nodes, and the auxiliary array $B[1..n]$ stores the internal
+nodes, with the parent of $A[i]$ ($i \geq 0$) located at $B[\lfloor i/2 \rfloor]$, the
+parent of $B[j]$ ($j < \lceil n/2 \rceil$) at $B[\lceil n/2 \rceil + \lfloor j/2
+\rfloor]$, etc. Internal nodes store the sums of their children.
+
+Then, $Add(i, y)$ requires us to add $y$ to $A[i]$ as well as all parents of
+$A[i]$. This is $O(\log{n})$.
+
+$Partial{\text -}sum(i)$ is computed recursively the same way as described in
+3-11 (b), with the $\operatorname{min}$ operation replaced by summation.
+This is also $O(\log{n})$.
+
+### 3-15)
+Note: this approach uses an approach inspired by the paper "An Efficient
+Representation for Sparse Sets" by Briggs and Torczon. As suggested by
+the title, their algorithm only works for sets, though it could
+be modified to allow repetitions, but those modifications would exceed
+the constraints of the problem. In order to support repeated integers,
+I've taken the liberty of assuming that our memory locations are wide enough
+to support the concatenation of two array indices.
+
+This solution uses the suggested two arrays $A$ and $B$. We also use
+one additional piece of memory, $t$, initialized to 0, that tracks the total
+number of integers present in the table. The three required operations are
+implemented as follows.
+
+$\operatorname{search}(X)$: Read $A[X]$ to obtain an index $j$ into $B$.
+If $j = 0$ or $j > t$, it is invalid, and $X$ is not present in the table.
+Otherwise, read $B[j]$ to obtain the value $k||l$ ($||$ denotes concatenation).
+If $k = X$, then $A[X]$ is 'vouched for,' and we may conclude that $X$ is present.
+$l$ is unused here.
+
+$\operatorname{insert}(X)$: If $t = n$, return an error. Otherwise, perform
+$\operatorname{search}(X)$ to determine if $X$ is already present. If it is,
+hold on to the value $j$. Otherwise set $j = 0$. Now increment $t$. Then write
+$t$ into $A[X]$. Then, write $X||j$ into $B[t]$.
+
+$\operatorname{delete}(X)$: First perform $\operatorname{search}(X)$ to
+determine if $X$ is already present. If it isn't, return an error. Otherwise,
+hold on to the values $j$ and $l$. Zero out $B[j]$. Then if $l \neq 0$, set
+$A[X] := l$. Decrement $t$. We could also zero out $A[X]$ if $l = 0$, but it
+isn't strictly necessary, since $B[j]$ no longer vouches for it.
+
+### 3-17)
+TODO
+
+### 3-19)
+Put the most frequently worn shirts in the most easily reached place. Kind of
+like an LRU cache. (I refuse to suggest that anyone do a binary search over shirts...)
+
