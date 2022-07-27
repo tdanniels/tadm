@@ -813,7 +813,7 @@ of $S_1$ or the minimum element of $S_2$, detach it from its parent, and make
 it the root of the new tree.
 
 An implementation is given below.
-```{.python include=src/3-9.py snippet=concat-binary-trees}
+```{.python include=src/3-9.py snippet=concat-bsts}
 ```
 
 ### 3-11)
@@ -911,9 +911,15 @@ $A[X] := l$. Decrement $t$. We could also zero out $A[X]$ if $l = 0$, but it
 isn't strictly necessary, since $B[j]$ no longer vouches for it.
 
 ### 3-17)
-TODO
+See $\texttt{src/3-17.py}$.
 
 ### 3-19)
 Put the most frequently worn shirts in the most easily reached place. Kind of
 like an LRU cache. (I refuse to suggest that anyone do a binary search over shirts...)
 
+### 3-21)
+Python affords a particularly nice implementation of this.
+```{.python include=src/bst.py snippet=bst-def}
+```
+```{.python include=src/bst.py snippet=bst-eq}
+```

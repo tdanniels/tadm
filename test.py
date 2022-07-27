@@ -3,6 +3,7 @@ from collections import deque
 import importlib
 import unittest
 
+from src import bst
 
 p1_1 = importlib.import_module("src.p1-1")
 p1_3 = importlib.import_module("src.p1-3")
@@ -11,6 +12,7 @@ l2_3 = importlib.import_module("src.l2-3")
 q1_27 = importlib.import_module("src.1-27")
 q3_1 = importlib.import_module("src.3-1")
 q3_9 = importlib.import_module("src.3-9")
+q3_17 = importlib.import_module("src.3-17")
 
 
 class Test1_27(unittest.TestCase):
@@ -74,6 +76,38 @@ class Test3_1(unittest.TestCase):
 
 
 class Test3_9(unittest.TestCase):
+    def test(self):
+        s1 = bst.from_list([[1], 2, [3]])
+        s2 = bst.from_list([[4], 5, [6]])
+        s3 = [[[1], 2], 3, [[4], 5, [6]]]
+        con = q3_9.concatenate(s1, s2)
+        self.assertEqual(con.to_list(), s3)
+
+
+class Test3_17(unittest.TestCase):
+    def test(self):
+        text = "ETA: tee ate"
+        shift = 7
+        ao = ord("a")
+        zo = ord("z")
+        cipher = {
+            chr(u): chr(v)
+            for (u, v) in zip(
+                range(ao, zo + 1),
+                map(lambda x: ((x - ao + shift) % 26) + ao, range(ao, zo + 1)),
+            )
+        }
+        ctext = q3_17.caesar(text, cipher)
+        decipher = q3_17.frequency_analysis(ctext)
+        decrypted = q3_17.caesar(ctext, decipher)
+        self.assertEqual(
+            decrypted,
+            "".join([c.lower() if c.isalpha() and c.isascii() else c for c in text]),
+        )
+        pass
+
+
+class Test3_21(unittest.TestCase):
     def test(self):
         # TODO
         pass
@@ -165,6 +199,23 @@ class TestL2_3(unittest.TestCase):
             sorted(sorted(l) for l in [[-2, -1, 1, 2], [-2, 0, 0, 2], [-1, 0, 0, 1]]),
         )
         self.assertEqual(s.fourSum([2, 2, 2, 2, 2], 8), [[2, 2, 2, 2]])
+
+
+class TestBST(unittest.TestCase):
+    def test_list(self):
+        l1 = [[1], 2, [3]]
+        l2 = [[1], 2, [4]]
+        self.assertEqual(bst.from_list(l1).to_list(), l1)
+        self.assertNotEqual(bst.from_list(l1).to_list(), l2)
+
+    def test_eq(self):
+        l1 = [[1], 2, [3]]
+        t1 = bst.from_list(l1)
+        t11 = bst.from_list(l1)
+        l2 = [[1], 2, [4]]
+        t2 = bst.from_list(l2)
+        self.assertTrue(t1 == t11)
+        self.assertFalse(t1 == t2)
 
 
 if __name__ == "__main__":
