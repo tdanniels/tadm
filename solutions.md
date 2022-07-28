@@ -923,3 +923,29 @@ Python affords a particularly nice implementation of this.
 ```
 ```{.python include=src/bst.py snippet=bst-eq}
 ```
+
+### 3-23)
+```{.python include=src/linkedlist.py snippet=reverse-ll dedent=4}
+```
+
+### 3-25)
+Count the number of occurrences of each character in the search string.
+Allocate a counter for each of the unique characters, and a counter for the
+total number of characters required. Then iterate over each character in the
+magazine and incremenent its counter if its target value has not been reached.
+If a character's counter is incremented, increment the 'total' counter as well.
+Halt and return true if the total reaches its target value. Otherwise, if all
+characters have been checked and the target total count has still not been
+reached, return false.
+
+### 3-27)
+The solution to this problem is the well known "Tortoise and Hare" algorithm.
+An implementation is given below.
+```{.python include=src/linkedlist.py snippet=tortoise-hare-ll dedent=4}
+```
+
+### 3-29)
+We use two layers of hash tables in the algorithm below. It runs in $O(n)$ time
+and uses $O(n)$ memory, where $n$ is the length of the corpus.
+```{.python include=src/3-29.py snippet=max-bigram}
+```

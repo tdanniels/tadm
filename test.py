@@ -4,6 +4,7 @@ import importlib
 import unittest
 
 from src import bst
+from src import linkedlist
 
 p1_1 = importlib.import_module("src.p1-1")
 p1_3 = importlib.import_module("src.p1-3")
@@ -13,6 +14,7 @@ q1_27 = importlib.import_module("src.1-27")
 q3_1 = importlib.import_module("src.3-1")
 q3_9 = importlib.import_module("src.3-9")
 q3_17 = importlib.import_module("src.3-17")
+q3_29 = importlib.import_module("src.3-29")
 
 
 class Test1_27(unittest.TestCase):
@@ -107,10 +109,21 @@ class Test3_17(unittest.TestCase):
         pass
 
 
-class Test3_21(unittest.TestCase):
+class Test3_29(unittest.TestCase):
     def test(self):
-        # TODO
-        pass
+        text = """The Free State of Dorimare was a very small country, but,
+        seeing that it was bounded on the south by the sea and on the north and
+        east by mountains, while its centre consisted of a rich plain, watered
+        by two rivers, a considerable variety of scenery and vegetation was to
+        be found within its borders. Indeed, towards the west, in striking
+        contrast with the pastoral sobriety of the central plain, the aspect of
+        the country became, if not tropical, at any rate distinctly exotic. Nor
+        was this to be wondered at, perhaps; for beyond the Debatable Hills
+        (the boundary of Dorimare in the west) lay Fairyland. There had,
+        however, been no intercourse between the two countries for many
+        centuries."""
+
+        self.assertEqual(q3_29.max_bigram(text), ("on", "the", 2))
 
 
 class TestP1_1(unittest.TestCase):
@@ -216,6 +229,33 @@ class TestBST(unittest.TestCase):
         t2 = bst.from_list(l2)
         self.assertTrue(t1 == t11)
         self.assertFalse(t1 == t2)
+
+
+class TestLinkedList(unittest.TestCase):
+    def test(self):
+        ls = [[1], [1, 2], [1, 2, 3], [1, 2, 3, 4]]
+        for l in ls:
+            self.assertEqual(linkedlist.LinkedList.from_list(l).to_list(), l)
+            self.assertEqual(
+                linkedlist.LinkedList.from_list(l).reverse().to_list(),
+                list(reversed(l)),
+            )
+            self.assertEqual(
+                linkedlist.LinkedList.from_list(l).reverse_nr().to_list(),
+                list(reversed(l)),
+            )
+
+    def test_loop(self):
+        ls = [[1], [1, 2], [1, 2, 3], [1, 2, 3, 4]]
+        for l in ls:
+            self.assertFalse(linkedlist.LinkedList.from_list(l).has_loop())
+
+        loop = linkedlist.LinkedList(1, None)
+        self.assertFalse(loop.has_loop())
+        loop.append(linkedlist.LinkedList(2, None))
+        self.assertFalse(loop.has_loop())
+        loop.append(linkedlist.LinkedList(3, loop))
+        self.assertTrue(loop.has_loop())
 
 
 if __name__ == "__main__":
