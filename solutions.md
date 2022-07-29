@@ -949,3 +949,13 @@ We use two layers of hash tables in the algorithm below. It runs in $O(n)$ time
 and uses $O(n)$ memory, where $n$ is the length of the corpus.
 ```{.python include=src/3-29.py snippet=max-bigram}
 ```
+
+### L3-1)
+https://leetcode.com/problems/validate-binary-search-tree/
+
+See $\texttt{src/l3-1.py}$.
+
+### L3-3)
+https://leetcode.com/problems/construct-binary-tree-from-preorder-and-inorder-traversal/
+
+See $\texttt{src/l3-3.py}$.

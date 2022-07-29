@@ -1,4 +1,4 @@
-""" LeetCode 402. Remove K Digits"""
+"""LeetCode 402. Remove K Digits"""
 
 # Ex.
 # Input: num = "1432219", k = 3
