@@ -319,7 +319,7 @@ See $\texttt{src/p1-1.py}$.
 UVA Judge 10142.
 See $\texttt{src/p1-3.py}$.
 
-## Chapter 1
+## Chapter 2
 ### 2-1)
 We may derive a closed form for $\operatorname{mystery}(n)$ as follows.
 Begin by expressing the function as a summation,
@@ -753,6 +753,7 @@ https://leetcode.com/problems/4sum/
 
 See $\texttt{src/l2-3.py}$.
 
+## Chapter 3
 ### 3-1)
 A stack is the appropriate data structure for this problem.
 We give an algorithm in Python below.
@@ -959,3 +960,85 @@ See $\texttt{src/l3-1.py}$.
 https://leetcode.com/problems/construct-binary-tree-from-preorder-and-inorder-traversal/
 
 See $\texttt{src/l3-3.py}$.
+
+## Chapter 4
+### 4-1)
+Sort the $2n$ players using any $O(n\log{n})$ sorting algorithm. Put the
+first $n$ sorted players into team $A$, and the remaining $n$ into team $B$.
+Since the sum of team $A$'s ratings is minimal and the sum of team $B$'s ratings
+is maximal, the rating disparity between teams is maximized.
+
+Note that this could also be achieved in $O(n)$ time using quickselect with
+median of medians pivot selection (in order to guarantee linear time) to find
+the median player, and then partitioning around that player.
+
+### 4-3)
+In order to minimize the maximum sum of any pair, we seek to pair the smallest
+number with the largest number, the second smallest with the second largest,
+etc. This can be achieved by sorting the $2n$ numbers with any $O(n\log{n})$
+sorting algorithm and then iterating forwards from the beginning and backwards
+from the end of the sorted sequence, pairing up the first and last numbers, the
+second and second to last, etc.
+
+### 4-5)
+The mode of a multiset can be computed in $O(n)$ expected time and $O(n)$ space
+with a hash table, by hashing each number and storing its multiplicity in the
+table, then iterating over the table to find the number with the largest
+multiplicity.
+
+The mode can also be computed in $O(n\log{n}$) time and $O(1)$ space by sorting
+the multiset and then iterating over the sorted sequence, counting the
+multiplicity of each repeated number and storing the maximum count in a
+register.
+
+### 4-7)
+#### (a)
+Sort the telephone bills and checks by account number and place them in their
+own stacks. (Merge sort would be a decent sorting algorithm to do by hand).
+Then attempt to pair the bill on top of its stack with a check for the same
+account number from the top of its corresponding stack. Accounts with unpaired
+bills have unpaid bills, though if there can be multiple checks/bills from the
+same account, the unpaid ones aren't necessarily the unpaired ones. This is
+$O(n\log{n})$.
+
+#### (b)
+Use bucket sort on the books, bucketed by the 30 publishers, then count the size
+of each bucket. This is $O(n)$.
+
+#### (c)
+Sort the checkout cards by name, and then scan the sorted pile for the count
+of unique names. This is $O(n\log{n})$.
+
+### 4-9)
+Note that these can both be solved in $O(n)$ expected operations and $O(n)$
+space with a hash table. We give sorting-based solutions below.
+
+#### (a)
+Sort $A$ and $B$ in ascending order, then iterate over them pair-wise,
+inserting an item from the current pair $(a, b)$ into $C = A \cup B$ according
+to the following rules:
+
+- If $a = b$, insert $a$ into $C$ and advance the iterators for $A$ and $B$.
+- If $a < b$, insert $a$ into $C$ and advance the iterator for $A$.
+- If $a > b$, insert $b$ into $C$ and advance the iterator for $B$.
+- If either of the queues has emptied out, insert the remaining elements of the
+non-empty set into $C$.
+
+#### (b)
+Repeat the second half of the algorithm in (a), after $A$ and $B$ have been sorted.
+
+### 4-11)
+Note that this can be accomplished with a hash table that maps from elements to
+element counts by hashing all elements and then scanning for keys with
+counts greater than $n/2$ or $n/4$.
+
+Since this is the sorting chapter, we give a sorting-based solution below.
+
+Apply a quickselect-like procedure where we recursively partition the list
+about a random pivot, recursing only into sublists of size $> n/2$ (or $n/4$).
+Modify the $\operatorname{partition}$ function to track whether all elements in
+a sublist are identical. If we partition a sublist of sufficient size with all
+identical elements, append that element to the output list and move on to the
+next sublist of sufficient size. When we run out of sublists of sufficient
+size, return the output list, which may be empty. The expected number of
+operations performed is $O(n + n/2 (+ n/4)) \in O(n)$.
