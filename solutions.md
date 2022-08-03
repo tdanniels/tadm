@@ -1042,3 +1042,104 @@ identical elements, append that element to the output list and move on to the
 next sublist of sufficient size. When we run out of sublists of sufficient
 size, return the output list, which may be empty. The expected number of
 operations performed is $O(n + n/2 (+ n/4)) \in O(n)$.
+
+### 4-13)
+#### (a)
+Doesn't matter. The maximum element can be retrieved in $O(1)$ from both a
+max-heap and sorted array.
+
+#### (b)
+The heap is better. Deletion can be achieved in $O(\log{n})$, while deletion
+from a sorted array is $O(n)$.
+
+#### (c)
+The heap is better, since it can be constructed in $O(n)$. Sorting the array is
+$O(n\log{n})$.
+
+#### (d)
+The array is better, since the minimum element can be found in $O(1)$. The
+max-heap requires $O(n)$, since each leaf must be visited in the worst case.
+
+### 4-15)
+#### (a)
+We can construct a \textit{max tournament tree}, a binary tree in which each
+parent node contains the greater of its children, with the $n$ keys as leaves,
+in at most $n-2$ comparisons: $n/2$ comparisons at height 0 (the leaves) to
+determine the next round of the tournament, $n/4$ at height 1, etc., for a
+total of
+
+$$ \sum_{i=1}^{\lceil \lg{n} \rceil} \frac{n}{2^i} \leq n $$
+
+comparisons in the worst case of a complete tree. Label the finalists $a$ and
+$b$ from largest to smallest. Then the second-largest element is one of $a$ or
+$b$, or a descendant of $a$. We must thus traverse back down the path of $a$,
+comparing elements to $b$, costing us $\lceil \lg{n}\rceil - 1$ more
+comparisons, for a total of $n - 1 + \lceil \lg{n} \rceil$ comparisons in the
+worst case.
+
+#### (b)
+The same data structure as in (a) can be used. Construct the tournament at the
+cost of at most $n$ comparisons. We then identify the third largest
+semifinalist at the cost of 1 comparison. Label the three largest semifinalists
+$a, b, c$ from largest to smallest. Then the third largest element of the input
+will either be a descendant of $a$ or $b$, or it will be $c$. We then must
+traverse down the paths of $a$ and $b$, comparing elements to $c$ (or a
+greater-valued element if we find one), at a cost of $2\lceil \lg{n} \rceil -
+4$ additional comparisons, for a total of $n - 3 + 2\lceil \lg{n} \rceil$
+comparisons in the worst case.
+
+Note that this algorithm \textit{does} (and must) identify the two largest keys
+$a$ and $b$ in the process as well.
+
+### 4-17)
+#### (a)
+Quicksort would make $$\sum_{i=0}^{\lg{n} - 1} n = n\lg{n}$$ comparisons.
+
+#### (b)
+Quicksort would make $$\sum_{i=0}^{\log_{3/2}{n} - 1} n = n \log_{3/2}{n} \approx 1.71\lg{n}$$ comparisons.
+
+### 4-19)
+#### (a)
+Consider a permutation of the integers $1, 2, \dots, n$. Assume that we're
+using the total order defined by the "less than" relation. Clearly, the
+permutation with the maximal number of inversions is $n, n-1, \dots, 1$. How
+many inversions exactly? The $n-1$ numbers that follow $n$ are all inversions,
+the $n-2$ numbers that follow $n-1$ are all inversions, etc. Thus we may count
+the total number of inversions as $$\sum_{i=1}^{n-1}i = n(n-1)/2$$ Thus it is
+clear that the permutation of $n$ items that has $n(n-1)/2$ inversions is one
+in which all $n$ (unique) items are sorted in reverse order.
+
+#### (b)
+Consider a permutation $P$ on $n$ unique items and its reversal $P^r$. Suppose
+$P$ has $k$ inversions. Then the remaining pairs in $P$, of which there must be
+$\binom{n}{2} - k = n(n-1) - k$, are not inverted. Since $P$'s reversal $P^r$
+turns inverted pairs into non-inverted pairs and vice-versa, we then have a total
+of $k + n(n-1) - k = n(n-1)$ inversions between them.
+
+#### (c)
+Consider the set $P$ of all permutations on $n$ distinct items. The cardinality
+of $P$ is $n!$. The expected number of inversions in a random permutation is
+given by
+
+\begin{align*}
+\sum_{p \in P} \frac{\operatorname{inversions}{(p)}}{n!} &=
+\frac{1}{n!}\sum_{p \in P} \operatorname{inversions}{(p)}
+\end{align*}
+
+We can partition $P$ into two sets $Q$ and $R$ of equal size $n!/2$, where $R$
+contains the reversals of all permutations in $Q$. We may then express the
+previous sum as
+
+\begin{align*}
+\frac{1}{n!}\sum_{p \in P} \operatorname{inversions}{(p)} &=
+\frac{1}{n!} \left( \sum_{q \in Q} \operatorname{inversions}{(q)} + \sum_{r \in R} \operatorname{inversions}{(r)} \right) \\
+&= \frac{1}{n!} \left( \frac{n!}{2} \frac{n(n-1)}{2} \right) \\
+&= \frac{n(n-1)}{4}
+\end{align*}
+
+### 4-21)
+In order to be stable, mergesort needs to ensure that during the merge
+operation, items from the "left" (lower indexed) merge queue are inserted
+before items from the "right" (higher indexed) merge queue when the items are
+considered equal.
+
