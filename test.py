@@ -15,6 +15,7 @@ q3_1 = importlib.import_module("src.3-1")
 q3_9 = importlib.import_module("src.3-9")
 q3_17 = importlib.import_module("src.3-17")
 q3_29 = importlib.import_module("src.3-29")
+q4_31 = importlib.import_module("src.4-31")
 
 
 class Test1_27(unittest.TestCase):
@@ -124,6 +125,30 @@ class Test3_29(unittest.TestCase):
         centuries."""
 
         self.assertEqual(q3_29.max_bigram(text), ("on", "the", 2))
+
+
+class Test4_31(unittest.TestCase):
+    def test(self):
+        for qlen, k in [
+            (1, 0),
+            (2, 0),
+            (2, 1),
+            (4, 1),
+            (4, 2),
+            (4, 3),
+            (5, 1),
+            (5, 2),
+            (5, 3),
+            (5, 4),
+            (100, 1),
+            (101, 48),
+            (101, 49),
+            (103, 96),
+        ]:
+            q = deque(range(qlen))
+            q.rotate(k)
+            k_ = q4_31.find_k(q, 0, len(q) - 1)
+            self.assertEqual(k_, k)
 
 
 class TestP1_1(unittest.TestCase):

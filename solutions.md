@@ -826,7 +826,7 @@ total time, which is required to initialize the array anyway.
 #### (b)
 Consider a complete binary tree that stores all $n$ values in its leaf nodes.
 If $n = 2^k$, no modifications are required, otherwise we can pad out the tree
-with infinite-valued nodes, which have no effect on $\min$ queries. The tree's
+with infinite-valued nodes which have no effect on $\min$ queries. The tree's
 internal nodes store the minimum values of all nodes beneath them. A tree of
 this description would require $\Omega(n)$ space: $n$ leaf nodes and $n-1$
 internal nodes.
@@ -1131,8 +1131,9 @@ contains the reversals of all permutations in $Q$. We may then express the
 previous sum as
 
 \begin{align*}
-\frac{1}{n!}\sum_{p \in P} \operatorname{inversions}{(p)} &=
-\frac{1}{n!} \left( \sum_{q \in Q} \operatorname{inversions}{(q)} + \sum_{r \in R} \operatorname{inversions}{(r)} \right) \\
+\frac{1}{n!}\sum_{p \in P} \operatorname{inversions}{(p)}
+&= \frac{1}{n!} \left( \sum_{q \in Q} \operatorname{inversions}{(q)} +
+   \sum_{r \in R} \operatorname{inversions}{(r)} \right) \\
 &= \frac{1}{n!} \left( \frac{n!}{2} \frac{n(n-1)}{2} \right) \\
 &= \frac{n(n-1)}{4}
 \end{align*}
@@ -1143,3 +1144,60 @@ operation, items from the "left" (lower indexed) merge queue are inserted
 before items from the "right" (higher indexed) merge queue when the items are
 considered equal.
 
+### 4-23)
+This can be achieved with a hash-based counter in $O(n) \in O(n\log\log{n})$
+operations and $O(\log{n})$ additional space. A dynamic perfect hash function
+may be used in order to obtain guranteed worst-case performance.
+
+Iterate over the input sequence, hashing each integer and incrementing its
+associated counter. This can be done in $O(n)$ operations. Afterwards, the
+number of keys in the table will be $O(\log{n})$. Then sort the keys with any
+$O(n\log{n})$ sorting algorithm and decompress the keys for a worst-case total runtime of
+$O(n + \log{n}\log\log{n}) \in O(n\log\log{n})$.
+
+### 4-25)
+Our algorithm must take at least $O(n)$ time, since we must examine every number in
+the input. An $O(n)$ sorting algorithm can be implemented for this input
+distribution as follows.
+
+Construct a perfect hash table keyed on the elements of $A$ with values equal
+to the counts of the elements of $A$ at the cost of $O(n)$ operations and
+$O(\log\log{n})$ space. Then sort the items at the cost of
+$(\log\log{n}\log\log\log{n})$ operations. Then decompress the items at the
+cost of $O(n)$ operations for an overall worst-case runtime of $O(n)$.
+
+### 4-27)
+For each edge $e_i$ in $P$, compute the pair of angles $(\alpha_i, \beta_i)$
+that corresponds to the vector from $q$ to either endpoint of $e_i$. Sort the
+pair so that $\alpha_i \leq \beta_i$. This can all be done in $\Theta(n)$, where $n$ is
+the number of edges in $P$.
+
+We wish to find the angle $\hat{\theta}$ which lies between the maximum number
+of $(\alpha_i, \beta_i$) pairs. Split apart the angle pairs and sort them
+individually, maintaining a tag on each angle for whether it's an $\alpha_i$ or
+$\beta_i$ angle, at a cost of $O(n\log{n})$ operations. Then scan through them,
+incrementing a counter whenever an $\alpha_i$ angle (line segment beginning) is
+encountered, and decrementing the same counter whenever a $\beta_i$ angle (line
+segment end) is encountered. The $\alpha_i$ angle at which the counter reaches
+its maximum value is $\hat{\theta}$.
+
+### 4-29)
+If such a priority queue existed, $O(n)$ comparison-based sorting could be
+implemented by inserting all elements in a sequence into the queue at a cost of
+$O(n)$ ($n times $O(1)$), and then extracting them all into an array, also at a
+cost of $O(n)$. This contradicts the $\Omega(n\log{n})$ lower bound on
+comparison-based sorting, and so such a queue cannot exist.
+
+### 4-31)
+- Given $A$ and $k$, $\operatorname{max}(A)$ can be found at $A[(n - 1 + k) \bmod n)]$
+(using 0-based indexing).
+- We can use one-sided binary search to find $k$, and then obtain
+$\operatorname{max}(A)$ using the method described above. More specifically,
+we compare $A[0]$ against $A[1]$, $A[2]$, $A[4]$, $A[8]$, etc., until we
+encounter a value smaller than $A[0]$, or we reach the end of $A$. Then we can
+repeat the process between the previous index and the one at which we found the
+smaller value (or reached the end of $A$). Note that this only works for arrays $A$
+without any duplicated values. An implementation in Python is given below.
+
+```{.python include=src/4-31.py snippet=find-k}
+```
