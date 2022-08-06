@@ -1,6 +1,8 @@
 from collections import deque
 
 import importlib
+import random
+import timeit
 import unittest
 
 from src import bst
@@ -16,6 +18,8 @@ q3_9 = importlib.import_module("src.3-9")
 q3_17 = importlib.import_module("src.3-17")
 q3_29 = importlib.import_module("src.3-29")
 q4_31 = importlib.import_module("src.4-31")
+q4_35 = importlib.import_module("src.4-35")
+sorting = importlib.import_module("src.sorting")
 
 
 class Test1_27(unittest.TestCase):
@@ -149,6 +153,105 @@ class Test4_31(unittest.TestCase):
             q.rotate(k)
             k_ = q4_31.find_k(q, 0, len(q) - 1)
             self.assertEqual(k_, k)
+
+
+class Test4_35(unittest.TestCase):
+    def test(self):
+        for m, sought, loc in [
+            ([[1]], 1, (0, 0)),
+            ([[1]], 0, None),
+            ([[1, 2, 2], [2, 2, 2], [2, 2, 2]], 1, (0, 0)),
+            ([[-1, 0, 1], [1, 1, 1], [1, 1, 1]], 0, (0, 1)),
+            ([[-1, 1, 1], [0, 1, 1], [2, 3, 4]], 0, (1, 0)),
+            ([[1, 1, 2], [1, 1, 3], [1, 1, 4]], 2, (0, 2)),
+            ([[1, 2, 2], [2, 2, 2], [3, 4, 4]], 3, (2, 0)),
+            ([[1, 1, 1], [1, 1, 1], [1, 1, 2]], 2, (2, 2)),
+            ([[0, 1, 2, 3], [4, 5, 6, 7], [8, 9, 10, 11]], -1, None),
+            ([[0, 1, 2, 3], [4, 5, 6, 7], [8, 9, 10, 11]], 4, (1, 0)),
+        ]:
+            self.assertEqual(
+                q4_35.binary_search_2d(m, sought, (0, len(m) - 1), (0, len(m[0]) - 1)),
+                loc,
+            )
+            self.assertEqual(
+                q4_35.saddleback(m, sought),
+                loc,
+            )
+
+    @unittest.skip("slow")
+    def test_bigmatrix(self):
+        random.seed(314159)
+
+        n = 1000
+        sought = 1001
+        m = [[random.randrange(-1000, 1000, 2) for _ in range(n)] for _ in range(n)]
+        m[n // 2][n // 2] = sought
+        for row in m:
+            row.sort()
+        for j in range(n):
+            col = [m[row][j] for row in range(n)]
+            col.sort()
+            for i in range(n):
+                m[i][j] = col[i]
+
+        start = timeit.default_timer()
+        floc = q4_35.binary_search_2d(m, sought, (0, len(m) - 1), (0, len(m[0]) - 1))
+        end = timeit.default_timer()
+        print(f"binary_search_2d took {end-start} seconds")
+
+        start = timeit.default_timer()
+        sloc = q4_35.saddleback(m, sought)
+        end = timeit.default_timer()
+        print(f"saddleback took {end-start} seconds")
+
+        start = timeit.default_timer()
+        for i in range(n):
+            for j in range(n):
+                if m[i][j] == sought:
+                    loc = (i, j)
+                    break
+        end = timeit.default_timer()
+        print(f"naive matrix search took {end-start} seconds")
+
+        self.assertEqual(floc, loc)
+        self.assertEqual(sloc, loc)
+
+
+class Test4_37(unittest.TestCase):
+    def test(self):
+        random.seed(314159)
+        seqs = [
+            [],
+            [1],
+            [1, 2],
+            [2, 1],
+            [1, 2, 3],
+            [2, 1, 3],
+            [3, 2, 1],
+            list(range(50)),
+            list(range(10)) * 10,
+        ]
+        random.shuffle(seqs[-2])
+        random.shuffle(seqs[-1])
+
+        baselines = []
+        for i, sort in enumerate(
+            (
+                list.sort,
+                sorting.selection_sort,
+                sorting.insertion_sort,
+                sorting.heapsort,
+                sorting.mergesort,
+                sorting.quicksort,
+            )
+        ):
+            for j, s in enumerate(seqs):
+                s_copy = s[:]
+                sort(s_copy)
+                if i == 0:
+                    baselines.append(s_copy)
+                else:
+                    self.assertEqual(s_copy, baselines[j])
 
 
 class TestP1_1(unittest.TestCase):

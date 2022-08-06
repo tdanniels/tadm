@@ -1201,3 +1201,58 @@ without any duplicated values. An implementation in Python is given below.
 
 ```{.python include=src/4-31.py snippet=find-k}
 ```
+
+### 4-33)
+We can use a binary search-like algorithm in which we begin our search in the
+middle of the sequence at $a_{\lfloor n/2 \rfloor}$, recurse into the left half of
+the sequence if $a_{\lfloor n/2 \rfloor} > \lfloor n/2 \rfloor$, and recurse
+into the right half of the sequence if $a_{\lfloor n/2 \rfloor} < \lfloor n/2
+\rfloor$. If we visit an index $i$ such that $a_i = i$ we return true,
+otherwise if we arrive at a search window of size 1 without finding such an
+$i$, we return false.
+
+### 4-35)
+We can attempt "2-D binary search" in which our search windows are rectangles.
+An implementation in Python is given below.
+
+```{.python include=src/4-35.py snippet=binary-search-2d}
+```
+
+Unfortunately, the algorithm performs poorly in comparison to the
+somewhat well known "saddleback" search given below.
+
+```{.python include=src/4-35.py snippet=saddleback}
+```
+
+The saddleback algorithm makes at most $n + m - 1$ comparisons. I haven't
+analyzed the complexity of "2-D binary search," though is most likely superlinear.
+
+### 4-37)
+See $\texttt{src/sorting.py}$ for implementation code.
+
+Output:
+
+```
+$ python src/4-37.py
+len(tokens) = 4400
+Sample output: ['a', 'able', 'about', 'above', 'access', 'accomplished', 'according',
+'account', 'accounts', 'achieved']
+Sort function 'sort' took 0.0005221809988142923 seconds: 1.000x baseline.
+Sort function 'selection_sort' took 0.4750563739980862 seconds: 909.754x baseline.
+Sort function 'insertion_sort' took 0.808971163998649 seconds: 1549.216x baseline.
+Sort function 'heapsort' took 0.02820608500041999 seconds: 54.016x baseline.
+Sort function 'mergesort' took 0.012172155998996459 seconds: 23.310x baseline.
+Sort function 'quicksort' took 0.014101160002610413 seconds: 27.004x baseline.
+```
+
+Some comments:
+
+- Heapsort is noticeably slower than the other fast sorting algorithms.
+This isn't too surprising given its reputation for being the slowest of the
+fast sorting algorithms. This is perhaps also exacerbated by function call
+overhead, given that CPython doesn't do any inlining.
+- Mergesort is marginally faster than quicksort. This can perhaps be explained by
+repeated list appends being cheaper than repeated swaps in CPython.
+
+### 4-39)
+See $\texttt{src/parmergesort.rs}$ for implementation code.
