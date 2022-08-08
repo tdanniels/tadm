@@ -250,13 +250,13 @@ the addition of any $k-l$ numbers from $S$ not already in the $l$-subset to the
 $l$-subset results in a winning ticket. We formalize this in the function
 below.
 
-```{.python include=src/1-27.py snippet=check-tickets}
+```{.python include=python/src/1-27.py snippet=check-tickets}
 ```
 
 A function implementing a greedy heuristic algorithm to generate good winning
 combinations of tickets follows.
 
-```{.python include=src/1-27.py snippet=gen-tickets}
+```{.python include=python/src/1-27.py snippet=gen-tickets}
 ```
 
 ### 1-29)
@@ -313,11 +313,11 @@ Looking it up, it seems I'm under by a factor of about 4.
 
 ### P1-1)
 UVA Judge 100.
-See $\texttt{src/p1-1.py}$.
+See $\texttt{python/src/p1-1.py}$.
 
 ### P1-3)
 UVA Judge 10142.
-See $\texttt{src/p1-3.py}$.
+See $\texttt{python/src/p1-3.py}$.
 
 ## Chapter 2
 ### 2-1)
@@ -746,18 +746,18 @@ $p_1$ can offer $p_3$ and $p_5$ $1 each. The final division is then $p_1:
 ### L2-1)
 https://leetcode.com/problems/remove-k-digits/
 
-See $\texttt{src/l2-1.py}$.
+See $\texttt{python/src/l2-1.py}$.
 
 ### L2-3)
 https://leetcode.com/problems/4sum/
 
-See $\texttt{src/l2-3.py}$.
+See $\texttt{python/src/l2-3.py}$.
 
 ## Chapter 3
 ### 3-1)
 A stack is the appropriate data structure for this problem.
 We give an algorithm in Python below.
-```{.python include=src/3-1.py snippet=balanced-parens}
+```{.python include=python/src/3-1.py snippet=balanced-parens}
 ```
 
 ### 3-3)
@@ -814,7 +814,7 @@ of $S_1$ or the minimum element of $S_2$, detach it from its parent, and make
 it the root of the new tree.
 
 An implementation is given below.
-```{.python include=src/3-9.py snippet=concat-bsts}
+```{.python include=python/src/3-9.py snippet=concat-bsts}
 ```
 
 ### 3-11)
@@ -912,7 +912,7 @@ $A[X] := l$. Decrement $t$. We could also zero out $A[X]$ if $l = 0$, but it
 isn't strictly necessary, since $B[j]$ no longer vouches for it.
 
 ### 3-17)
-See $\texttt{src/3-17.py}$.
+See $\texttt{python/src/3-17.py}$.
 
 ### 3-19)
 Put the most frequently worn shirts in the most easily reached place. Kind of
@@ -920,13 +920,13 @@ like an LRU cache. (I refuse to suggest that anyone do a binary search over shir
 
 ### 3-21)
 Python affords a particularly nice implementation of this.
-```{.python include=src/bst.py snippet=bst-def}
+```{.python include=python/src/bst.py snippet=bst-def}
 ```
-```{.python include=src/bst.py snippet=bst-eq}
+```{.python include=python/src/bst.py snippet=bst-eq}
 ```
 
 ### 3-23)
-```{.python include=src/linkedlist.py snippet=reverse-ll dedent=4}
+```{.python include=python/src/linkedlist.py snippet=reverse-ll dedent=4}
 ```
 
 ### 3-25)
@@ -942,24 +942,24 @@ reached, return false.
 ### 3-27)
 The solution to this problem is the well known "Tortoise and Hare" algorithm.
 An implementation is given below.
-```{.python include=src/linkedlist.py snippet=tortoise-hare-ll dedent=4}
+```{.python include=python/src/linkedlist.py snippet=tortoise-hare-ll dedent=4}
 ```
 
 ### 3-29)
 We use two layers of hash tables in the algorithm below. It runs in $O(n)$ time
 and uses $O(n)$ memory, where $n$ is the length of the corpus.
-```{.python include=src/3-29.py snippet=max-bigram}
+```{.python include=python/src/3-29.py snippet=max-bigram}
 ```
 
 ### L3-1)
 https://leetcode.com/problems/validate-binary-search-tree/
 
-See $\texttt{src/l3-1.py}$.
+See $\texttt{python/src/l3-1.py}$.
 
 ### L3-3)
 https://leetcode.com/problems/construct-binary-tree-from-preorder-and-inorder-traversal/
 
-See $\texttt{src/l3-3.py}$.
+See $\texttt{python/src/l3-3.py}$.
 
 ## Chapter 4
 ### 4-1)
@@ -1199,7 +1199,7 @@ repeat the process between the previous index and the one at which we found the
 smaller value (or reached the end of $A$). Note that this only works for arrays $A$
 without any duplicated values. An implementation in Python is given below.
 
-```{.python include=src/4-31.py snippet=find-k}
+```{.python include=python/src/4-31.py snippet=find-k}
 ```
 
 ### 4-33)
@@ -1215,25 +1215,25 @@ $i$, we return false.
 We can attempt "2-D binary search" in which our search windows are rectangles.
 An implementation in Python is given below.
 
-```{.python include=src/4-35.py snippet=binary-search-2d}
+```{.python include=python/src/4-35.py snippet=binary-search-2d}
 ```
 
 Unfortunately, the algorithm performs poorly in comparison to the
 somewhat well known "saddleback" search given below.
 
-```{.python include=src/4-35.py snippet=saddleback}
+```{.python include=python/src/4-35.py snippet=saddleback}
 ```
 
 The saddleback algorithm makes at most $n + m - 1$ comparisons. I haven't
 analyzed the complexity of "2-D binary search," though is most likely superlinear.
 
 ### 4-37)
-See $\texttt{src/sorting.py}$ for implementation code.
+See $\texttt{python/src/sorting.py}$ for implementation code.
 
 Output:
 
 ```
-$ python src/4-37.py
+$ python python/src/4-37.py
 len(tokens) = 4400
 Sample output: ['a', 'able', 'about', 'above', 'access', 'accomplished', 'according',
 'account', 'accounts', 'achieved']
@@ -1255,4 +1255,4 @@ overhead, given that CPython doesn't do any inlining.
 repeated list appends being cheaper than repeated swaps in CPython.
 
 ### 4-39)
-See $\texttt{src/parmergesort.rs}$ for implementation code.
+See $\texttt{rust/parmergesort/src/main.rs}$ for implementation code.

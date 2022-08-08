@@ -5,8 +5,9 @@ import random
 import timeit
 import unittest
 
-from src import bst
-from src import linkedlist
+import bst
+import linkedlist
+import sorting
 
 p1_1 = importlib.import_module("src.p1-1")
 p1_3 = importlib.import_module("src.p1-3")
@@ -19,7 +20,6 @@ q3_17 = importlib.import_module("src.3-17")
 q3_29 = importlib.import_module("src.3-29")
 q4_31 = importlib.import_module("src.4-31")
 q4_35 = importlib.import_module("src.4-35")
-sorting = importlib.import_module("src.sorting")
 
 
 class Test1_27(unittest.TestCase):
@@ -217,43 +217,6 @@ class Test4_35(unittest.TestCase):
         self.assertEqual(sloc, loc)
 
 
-class Test4_37(unittest.TestCase):
-    def test(self):
-        random.seed(314159)
-        seqs = [
-            [],
-            [1],
-            [1, 2],
-            [2, 1],
-            [1, 2, 3],
-            [2, 1, 3],
-            [3, 2, 1],
-            list(range(50)),
-            list(range(10)) * 10,
-        ]
-        random.shuffle(seqs[-2])
-        random.shuffle(seqs[-1])
-
-        baselines = []
-        for i, sort in enumerate(
-            (
-                list.sort,
-                sorting.selection_sort,
-                sorting.insertion_sort,
-                sorting.heapsort,
-                sorting.mergesort,
-                sorting.quicksort,
-            )
-        ):
-            for j, s in enumerate(seqs):
-                s_copy = s[:]
-                sort(s_copy)
-                if i == 0:
-                    baselines.append(s_copy)
-                else:
-                    self.assertEqual(s_copy, baselines[j])
-
-
 class TestP1_1(unittest.TestCase):
     def test(self):
         self.assertEqual(p1_1.solve(1, 10), "1 10 20")
@@ -384,6 +347,43 @@ class TestLinkedList(unittest.TestCase):
         self.assertFalse(loop.has_loop())
         loop.append(linkedlist.LinkedList(3, loop))
         self.assertTrue(loop.has_loop())
+
+
+class TestSorting(unittest.TestCase):
+    def test(self):
+        random.seed(314159)
+        seqs = [
+            [],
+            [1],
+            [1, 2],
+            [2, 1],
+            [1, 2, 3],
+            [2, 1, 3],
+            [3, 2, 1],
+            list(range(50)),
+            list(range(10)) * 10,
+        ]
+        random.shuffle(seqs[-2])
+        random.shuffle(seqs[-1])
+
+        baselines = []
+        for i, sort in enumerate(
+            (
+                list.sort,
+                sorting.selection_sort,
+                sorting.insertion_sort,
+                sorting.heapsort,
+                sorting.mergesort,
+                sorting.quicksort,
+            )
+        ):
+            for j, s in enumerate(seqs):
+                s_copy = s[:]
+                sort(s_copy)
+                if i == 0:
+                    baselines.append(s_copy)
+                else:
+                    self.assertEqual(s_copy, baselines[j])
 
 
 if __name__ == "__main__":

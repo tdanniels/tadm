@@ -1,4 +1,4 @@
-from .bst import BST
+from bst import BST
 
 
 # start snippet concat-bsts
