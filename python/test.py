@@ -1,6 +1,5 @@
 from collections import deque
 
-import importlib
 import random
 import timeit
 import unittest
@@ -9,42 +8,42 @@ import bst
 import linkedlist
 import sorting
 
-p1_1 = importlib.import_module("src.p1-1")
-p1_3 = importlib.import_module("src.p1-3")
-l2_1 = importlib.import_module("src.l2-1")
-l2_3 = importlib.import_module("src.l2-3")
-q1_27 = importlib.import_module("src.1-27")
-q3_1 = importlib.import_module("src.3-1")
-q3_9 = importlib.import_module("src.3-9")
-q3_17 = importlib.import_module("src.3-17")
-q3_29 = importlib.import_module("src.3-29")
-q4_31 = importlib.import_module("src.4-31")
-q4_35 = importlib.import_module("src.4-35")
+import l02_01
+import l02_03
+import p01_01
+import p01_03
+import q01_27
+import q03_01
+import q03_09
+import q03_17
+import q03_29
+import q04_31
+import q04_35
 
 
-class Test1_27(unittest.TestCase):
+class TestQ01_27(unittest.TestCase):
     def test(self):
         S = [1, 2, 3, 4, 5]
         k = 3
         l = 2
-        self.assertTrue(q1_27.check_tickets([[1, 2, 3], [1, 4, 5]], S, k, l))
-        self.assertFalse(q1_27.check_tickets([[1, 2, 3], [1, 2, 4]], S, k, l))
+        self.assertTrue(q01_27.check_tickets([[1, 2, 3], [1, 4, 5]], S, k, l))
+        self.assertFalse(q01_27.check_tickets([[1, 2, 3], [1, 2, 4]], S, k, l))
 
-        gen = q1_27.gen_tickets(S, k, l)
-        self.assertTrue(q1_27.check_tickets(gen, S, k, l))
+        gen = q01_27.gen_tickets(S, k, l)
+        self.assertTrue(q01_27.check_tickets(gen, S, k, l))
         self.assertEqual(len(gen), 2)
 
         S = list(range(1, 11))
         k = 6
         l = 3
-        gen = q1_27.gen_tickets(S, k, l)
-        self.assertTrue(q1_27.check_tickets(gen, S, k, l))
+        gen = q01_27.gen_tickets(S, k, l)
+        self.assertTrue(q01_27.check_tickets(gen, S, k, l))
 
         S = list(range(1, 16))
         k = 6
         l = 3
         self.assertTrue(
-            q1_27.check_tickets(
+            q01_27.check_tickets(
                 [
                     [2, 4, 8, 10, 13, 14],
                     [4, 5, 7, 8, 12, 15],
@@ -58,7 +57,7 @@ class Test1_27(unittest.TestCase):
             )
         )
         self.assertFalse(
-            q1_27.check_tickets(
+            q01_27.check_tickets(
                 [
                     [2, 4, 8, 10, 13, 14],
                     [4, 5, 7, 8, 12, 15],
@@ -72,26 +71,26 @@ class Test1_27(unittest.TestCase):
         )
 
 
-class Test3_1(unittest.TestCase):
+class TestQ03_01(unittest.TestCase):
     def test(self):
-        self.assertTrue(q3_1.balanced_parens("((())())()"))
-        self.assertTrue(q3_1.balanced_parens("((())(()(())))"))
-        self.assertFalse(q3_1.balanced_parens(")()("))
-        self.assertFalse(q3_1.balanced_parens("())"))
-        self.assertFalse(q3_1.balanced_parens("((("))
-        self.assertFalse(q3_1.balanced_parens("()(()"))
+        self.assertTrue(q03_01.balanced_parens("((())())()"))
+        self.assertTrue(q03_01.balanced_parens("((())(()(())))"))
+        self.assertFalse(q03_01.balanced_parens(")()("))
+        self.assertFalse(q03_01.balanced_parens("())"))
+        self.assertFalse(q03_01.balanced_parens("((("))
+        self.assertFalse(q03_01.balanced_parens("()(()"))
 
 
-class Test3_9(unittest.TestCase):
+class TestQ03_09(unittest.TestCase):
     def test(self):
         s1 = bst.from_list([[1], 2, [3]])
         s2 = bst.from_list([[4], 5, [6]])
         s3 = [[[1], 2], 3, [[4], 5, [6]]]
-        con = q3_9.concatenate(s1, s2)
+        con = q03_09.concatenate(s1, s2)
         self.assertEqual(con.to_list(), s3)
 
 
-class Test3_17(unittest.TestCase):
+class TestQ03_17(unittest.TestCase):
     def test(self):
         text = "ETA: tee ate"
         shift = 7
@@ -104,9 +103,9 @@ class Test3_17(unittest.TestCase):
                 map(lambda x: ((x - ao + shift) % 26) + ao, range(ao, zo + 1)),
             )
         }
-        ctext = q3_17.caesar(text, cipher)
-        decipher = q3_17.frequency_analysis(ctext)
-        decrypted = q3_17.caesar(ctext, decipher)
+        ctext = q03_17.caesar(text, cipher)
+        decipher = q03_17.frequency_analysis(ctext)
+        decrypted = q03_17.caesar(ctext, decipher)
         self.assertEqual(
             decrypted,
             "".join([c.lower() if c.isalpha() and c.isascii() else c for c in text]),
@@ -114,7 +113,7 @@ class Test3_17(unittest.TestCase):
         pass
 
 
-class Test3_29(unittest.TestCase):
+class TestQ03_29(unittest.TestCase):
     def test(self):
         text = """The Free State of Dorimare was a very small country, but,
         seeing that it was bounded on the south by the sea and on the north and
@@ -128,10 +127,10 @@ class Test3_29(unittest.TestCase):
         however, been no intercourse between the two countries for many
         centuries."""
 
-        self.assertEqual(q3_29.max_bigram(text), ("on", "the", 2))
+        self.assertEqual(q03_29.max_bigram(text), ("on", "the", 2))
 
 
-class Test4_31(unittest.TestCase):
+class TestQ04_31(unittest.TestCase):
     def test(self):
         for qlen, k in [
             (1, 0),
@@ -151,11 +150,11 @@ class Test4_31(unittest.TestCase):
         ]:
             q = deque(range(qlen))
             q.rotate(k)
-            k_ = q4_31.find_k(q, 0, len(q) - 1)
+            k_ = q04_31.find_k(q, 0, len(q) - 1)
             self.assertEqual(k_, k)
 
 
-class Test4_35(unittest.TestCase):
+class TestQ04_35(unittest.TestCase):
     def test(self):
         for m, sought, loc in [
             ([[1]], 1, (0, 0)),
@@ -170,11 +169,11 @@ class Test4_35(unittest.TestCase):
             ([[0, 1, 2, 3], [4, 5, 6, 7], [8, 9, 10, 11]], 4, (1, 0)),
         ]:
             self.assertEqual(
-                q4_35.binary_search_2d(m, sought, (0, len(m) - 1), (0, len(m[0]) - 1)),
+                q04_35.binary_search_2d(m, sought, (0, len(m) - 1), (0, len(m[0]) - 1)),
                 loc,
             )
             self.assertEqual(
-                q4_35.saddleback(m, sought),
+                q04_35.saddleback(m, sought),
                 loc,
             )
 
@@ -195,12 +194,12 @@ class Test4_35(unittest.TestCase):
                 m[i][j] = col[i]
 
         start = timeit.default_timer()
-        floc = q4_35.binary_search_2d(m, sought, (0, len(m) - 1), (0, len(m[0]) - 1))
+        floc = q04_35.binary_search_2d(m, sought, (0, len(m) - 1), (0, len(m[0]) - 1))
         end = timeit.default_timer()
         print(f"binary_search_2d took {end-start} seconds")
 
         start = timeit.default_timer()
-        sloc = q4_35.saddleback(m, sought)
+        sloc = q04_35.saddleback(m, sought)
         end = timeit.default_timer()
         print(f"saddleback took {end-start} seconds")
 
@@ -217,18 +216,18 @@ class Test4_35(unittest.TestCase):
         self.assertEqual(sloc, loc)
 
 
-class TestP1_1(unittest.TestCase):
+class TestP01_01(unittest.TestCase):
     def test(self):
-        self.assertEqual(p1_1.solve(1, 10), "1 10 20")
-        self.assertEqual(p1_1.solve(100, 200), "100 200 125")
-        self.assertEqual(p1_1.solve(201, 210), "201 210 89")
-        self.assertEqual(p1_1.solve(900, 1000), "900 1000 174")
-        self.assertEqual(p1_1.solve(1000, 900), "1000 900 174")
+        self.assertEqual(p01_01.solve(1, 10), "1 10 20")
+        self.assertEqual(p01_01.solve(100, 200), "100 200 125")
+        self.assertEqual(p01_01.solve(201, 210), "201 210 89")
+        self.assertEqual(p01_01.solve(900, 1000), "900 1000 174")
+        self.assertEqual(p01_01.solve(1000, 900), "1000 900 174")
         # Worst case input:
-        self.assertEqual(p1_1.solve(1, 9999), "1 9999 262")
+        self.assertEqual(p01_01.solve(1, 9999), "1 9999 262")
 
 
-class TestP1_3(unittest.TestCase):
+class TestP01_03(unittest.TestCase):
     def test(self):
         inp = deque(
             [
@@ -245,7 +244,7 @@ class TestP1_3(unittest.TestCase):
                 "3 1 2",
             ]
         )
-        self.assertEqual(p1_3.solve(p1_3.parse(inp)), ["John Doe"])
+        self.assertEqual(p01_03.solve(p01_03.parse(inp)), ["John Doe"])
 
         inp = deque(
             [
@@ -268,12 +267,12 @@ class TestP1_3(unittest.TestCase):
                 "2 1",
             ]
         )
-        self.assertEqual(p1_3.solve(p1_3.parse(inp)), ["John Doe", "", "a", "b"])
+        self.assertEqual(p01_03.solve(p01_03.parse(inp)), ["John Doe", "", "a", "b"])
 
 
-class TestL2_1(unittest.TestCase):
+class TestL02_01(unittest.TestCase):
     def test(self):
-        s = l2_1.Solution()
+        s = l02_01.Solution()
 
         for d, k, soln in [
             ("52660469", 2, "260469"),
@@ -295,9 +294,9 @@ class TestL2_1(unittest.TestCase):
             self.assertEqual(rkd, soln)
 
 
-class TestL2_3(unittest.TestCase):
+class TestL02_03(unittest.TestCase):
     def test(self):
-        s = l2_3.Solution()
+        s = l02_03.Solution()
         self.assertEqual(
             sorted([sorted(l) for l in s.fourSum([1, 0, -1, 0, -2, 2], 0)]),
             sorted(sorted(l) for l in [[-2, -1, 1, 2], [-2, 0, 0, 2], [-1, 0, 0, 1]]),
