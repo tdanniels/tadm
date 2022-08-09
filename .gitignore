@@ -1,3 +1,4 @@
 *.pdf
 work.sh
 __pycache__
+rust/**/target

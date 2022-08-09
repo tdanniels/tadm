@@ -1228,7 +1228,7 @@ The saddleback algorithm makes at most $n + m - 1$ comparisons. I haven't
 analyzed the complexity of "2-D binary search," though is most likely superlinear.
 
 ### 4-37)
-See $\texttt{python/src/sorting.py}$ for implementation code.
+See $\texttt{python/src/sorting.py}$ for the implementation.
 
 Output:
 
@@ -1249,10 +1249,81 @@ Some comments:
 
 - Heapsort is noticeably slower than the other fast sorting algorithms.
 This isn't too surprising given its reputation for being the slowest of the
-fast sorting algorithms. This is perhaps also exacerbated by function call
-overhead, given that CPython doesn't do any inlining.
+fast sorting algorithms. I also didn't use the $O(n)$ heapify. This is perhaps
+also exacerbated by function call overhead, given that CPython doesn't do any
+inlining.
 - Mergesort is marginally faster than quicksort. This can perhaps be explained by
 repeated list appends being cheaper than repeated swaps in CPython.
 
 ### 4-39)
-See $\texttt{rust/parmergesort/src/main.rs}$ for implementation code.
+See $\texttt{rust/parmergesort/src/main.rs}$ for an implementation of parallel
+merge sort. Results from a 4 core, 8 hyperthread machine:
+```
+$ ./target/release/parmergesort
+n = 20000000
+baseline_elapsed = 1.073 s
+threads = 1, elapsed = 1.905 s (1.776x baseline)
+threads = 2, elapsed = 1.015 s (0.946x baseline)
+threads = 4, elapsed = 0.581 s (0.542x baseline)
+threads = 8, elapsed = 0.592 s (0.552x baseline)
+```
+The baseline sort algorithm is the optimized mergesort implementation from
+Rust's standard library. We achieve approximately linear speedup up to 4
+threads, but are in fact slightly slower on 8. This can likely be attributed to
+resource contention and cache thrashing between hyperthreads sharing cores.
+
+### 4-41)
+- Insertion sort
+  - Good: simple to implement, low code size, efficient for small inputs due to
+  small constants
+  - Bad: $O(n^2)$ complexity means it's unusable for larger inputs
+- Selection sort
+  - Good: simple to implement, low code size, efficient for small inputs due to
+  small constants
+  - Bad: $O(n^2)$ complexity means it's unusable for larger inputs
+- Heapsort
+  - Good: in-place, relatively fast when one is already maintaining a sequence
+  in a heap
+  - Bad: not stable, worst constants out of the "big three" sorting algorithms
+- Mergesort
+  - Good: stable, amenable to external sorting, amenable
+  to parallelization, often the fastest of the big 3 sorting algorithms due to
+  good cache behaviour and \texttt{memcpy} being highly optimized
+  - Bad: requires $\Theta(n)$ additional space
+- Quicksort
+  - Good: in-place, competitive for the title of the fastest sorting algorithm
+  in the average case
+  - Bad: $O(n^2)$ worst-case complexity if care isn't taken to handle pathological
+  inputs
+
+### 4-43)
+Break the file into chunks of size $k < 2 \ \text{Mb}$ and sort them
+individually, writing the sorted chunks as separate files to disk. Then perform
+an $n$-way merge of the sorted chunks, using a heap to speed up the process.
+Initialize $i$ to $0$ and build a min-heap from the smallest element of each of
+the chunks, augmented with the index of the chunk it came from. Then pop the
+smallest item from the heap and write it to position $i$ of the original file.
+Then insert the next smallest item from the chunk that contained the popped
+item into the heap. This maintains the invariant that the smallest item in the
+heap is the smallest item across all of the chunks. Increment $i$ and repeat
+this pop, insert, increment process until all values have been written.
+
+### 4-45)
+Collect the indices along with their associated word into a priority queue in
+$O(n\lg{3}) \in O(n)$ time, where $n$ is the largest of the three index lists.
+We can then iterate over the indices and maintain a minimal pair of indices
+that contains all three words, if such a pair exists. See the full $O(n)$
+implementation below.
+
+```{.python include=python/src/q04_45.py snippet=closest3}
+```
+
+### L4-1)
+https://leetcode.com/problems/sort-list/
+
+See $\texttt{python/src/l04\_01.py}$.
+
+### L4-3)
+https://leetcode.com/problems/merge-k-sorted-lists/
+
+See $\texttt{python/src/l04\_03.py}$.

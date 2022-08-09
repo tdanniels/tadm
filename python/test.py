@@ -19,6 +19,7 @@ import q03_17
 import q03_29
 import q04_31
 import q04_35
+import q04_45
 
 
 class TestQ01_27(unittest.TestCase):
@@ -214,6 +215,19 @@ class TestQ04_35(unittest.TestCase):
 
         self.assertEqual(floc, loc)
         self.assertEqual(sloc, loc)
+
+
+class TestQ04_45(unittest.TestCase):
+    def test(self):
+        for w1, w2, w3, s in (
+            [[0, 4, 7], [1, 8], [5, 9], (7, 9)],
+            [[1, 4, 5], [2, 7, 8], [3, 9, 16], (1, 3)],
+            [[1, 10], [2, 20], [3, 30], (1, 3)],
+            [[1, 9, 27], [6, 10, 19], [8, 12, 14], (8, 10)],
+            [[1, 4, 11, 27], [3, 6, 10, 19], [5, 8, 12, 14], (3, 5)],
+            [[1, 4, 5], [3, 9, 10], [2, 6, 15], (1, 3)],
+        ):
+            self.assertEqual(q04_45.closest3(w1, w2, w3), s)
 
 
 class TestP01_01(unittest.TestCase):

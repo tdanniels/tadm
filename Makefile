@@ -6,14 +6,21 @@ all:
 .PHONY: test
 test: checkpy testpy testrs
 
+.PHONY: checkpy
 checkpy:
 	@pyright python/src
 
+.PHONY: testpy
 testpy: export PYTHONPATH = python:python/src
 testpy:
 	@python -m unittest -b test
 
+.PHONY: testrs
 testrs:
+	@for p in rust/**/Cargo.toml; do \
+		cd "$$(dirname "$$p")" && cargo test && cd -; \
+	done
 
+.PHONY: clean
 clean:
 	@rm -f bin/solutions.pdf

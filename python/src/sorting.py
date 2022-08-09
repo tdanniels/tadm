@@ -26,7 +26,7 @@ def heapsort(l: list):
     def pq_parent(i):
         if i == 0:
             return None
-        return i // 2 - ((i % 2) ^ 1)
+        return (i - 1) // 2
 
     def pq_first_child(i):
         return 2 * i + 1
@@ -157,7 +157,7 @@ def load_corpus(filename: str) -> str:
 
 
 if __name__ == "__main__":
-    corpus = load_corpus("./solutions.md")
+    corpus = load_corpus("./src/solutions.md")
     tokens = tokenize(corpus)
     print(f"len(tokens) = {len(tokens)}")
     outputs = []
