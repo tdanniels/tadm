@@ -8,7 +8,7 @@ test: checkpy testpy testrs
 
 .PHONY: checkpy
 checkpy:
-	@pyright python/src
+	@pyright -p python python/src
 
 .PHONY: testpy
 testpy: export PYTHONPATH = python:python/src
