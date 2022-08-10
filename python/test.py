@@ -10,6 +10,7 @@ import sorting
 
 import l02_01
 import l02_03
+import l04_01
 import p01_01
 import p01_03
 import q01_27
@@ -316,6 +317,26 @@ class TestL02_03(unittest.TestCase):
             sorted(sorted(l) for l in [[-2, -1, 1, 2], [-2, 0, 0, 2], [-1, 0, 0, 1]]),
         )
         self.assertEqual(s.fourSum([2, 2, 2, 2, 2], 8), [[2, 2, 2, 2]])
+
+
+class TestL04_01(unittest.TestCase):
+    def test(self):
+        head = l04_01.ListNode(4)
+        head.next = l04_01.ListNode(2)
+        head.next.next = l04_01.ListNode(1)
+        head.next.next.next = l04_01.ListNode(3)
+
+        s = l04_01.Solution()
+        newhead = s.sortList(head)
+        print(newhead.val)
+        print(newhead.next.val)
+        print(newhead.next.next.val)
+        print(newhead.next.next.next.val)
+
+        self.assertEqual(newhead.val, 1)
+        self.assertEqual(newhead.next.val, 2)
+        self.assertEqual(newhead.next.next.val, 3)
+        self.assertEqual(newhead.next.next.next.val, 4)
 
 
 class TestBST(unittest.TestCase):
