@@ -24,3 +24,6 @@ testrs:
 .PHONY: clean
 clean:
 	@rm -f bin/solutions.pdf
+	@for p in rust/**/Cargo.toml; do \
+		cd "$$(dirname "$$p")" && cargo clean && cd -; \
+	done
