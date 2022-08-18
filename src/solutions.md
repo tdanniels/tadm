@@ -1327,3 +1327,78 @@ See $\texttt{python/src/l04\_01.py}$.
 https://leetcode.com/problems/merge-k-sorted-lists/
 
 See $\texttt{python/src/l04\_03.py}$.
+
+## Chapter 5
+### 5-1)
+#### (a)
+$\operatorname{bfs}(G_1)$: $A, B, D, I, C, E, G, J, F, H$
+
+$\operatorname{bfs}(G_2)$: $A, B, E, C, F, I, D, G, J, M, H, K, N, L, O, P$
+
+#### (b)
+$\operatorname{dfs}(G_1)$: $A, B, C, E, D, G, H, F, J, I$
+
+$\operatorname{dfs}(G_2)$: $A, B, C, D, H, G, F, E, I, J, K, L, P, O, N, M$
+
+### 5-3)
+Consider a tree of $n$ vertices.
+
+Base case: $n$ = 1. Clearly there is only one path from a vertex to itself.
+
+Assumptions: There is a unique path between any pair of vertices in a tree of
+$n > 0$ vertices.
+
+Inductive step: Consider a tree on $n$ vertices. All pairs of vertices $u, v$
+have a unique path between them. Now add a node $s$ anywhere in the tree,
+either as a leaf, or an internal node by replacing the edge $(u, v)$ with an
+edge-vertex-edge trio $(u, s, v)$. If $s$ is a leaf, the path to it from any node
+$u$ is unique because the path to $s$'s parent is unique, and the path from
+$s$'s parent to $s$ is also unique. If $s$ is an internal node, the same
+reasoning applies, and thus all possibilities are covered.
+\begin{flushright} \rule{1.2ex}{1.2ex} \end{flushright}
+
+### 5-5)
+Run a breadth-first search on the graph, coloring each newly discovered vertex
+a different color from each of its discovered or processed neighbours, greedily
+avoiding the use of new colours.
+
+We need at most three colours. To see why a third colour may be necessary, consider
+a graph that consists of a single cycle, with an odd number $n > 1$ of nodes. Thus
+not all such graphs are bipartite.
+
+### 5-7)
+It is possible to reconstruct a tree from its pre-order and in-order traversals
+\textit{if the values in the tree are unique}. See the answer to question
+\textbf{L3-3} for an implementation. The main idea behind the algorithm is that
+we can recursively identify the root of each subtree by using the fact that in
+a pre-order, the root is always the first item, and in an in-order, the root is
+always the middle item. Combining this information from each traversal allows
+us to recurse down to the tree's leaves and reconstruct it from the bottom up.
+
+It is not possible to reconstruct a tree from its pre-order and post-order
+traversals if we make a distinction between whether the child of a single-child
+node is a left or right child. However, if we don't care (i.e., we treat the
+tree as a graph), we can reconstruct the tree by working forwards through the
+pre-order and backwards through the post-order, grouping nodes appropriately.
+
+### 5-9)
+Perform a modified postorder traversal (or dfs) of the tree, in which we
+recursively compute the result of each operator on its children and return the
+computed value after each child has been visited.
+
+E.g.,
+
+\begin{algorithm}[H]
+\SetAlgoNoLine
+\DontPrintSemicolon
+\SetKwFunction{Eval}{\textsc{eval}}
+\SetKwProg{Fn}{function}{:}{}
+\Fn{\Eval{$x$}}{
+    \If{x.val \textup{is an integer}}{
+        \Return $x.val$
+    }
+    $l \leftarrow$ \Eval{x.left};\\
+    $r \leftarrow$ \Eval{x.right};\\
+    \Return{$l \ x.val \ r$}\;
+}
+\end{algorithm}
