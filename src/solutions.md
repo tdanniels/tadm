@@ -1382,7 +1382,7 @@ tree as a graph), we can reconstruct the tree by working forwards through the
 pre-order and backwards through the post-order, grouping nodes appropriately.
 
 ### 5-9)
-Perform a modified postorder traversal (or dfs) of the tree, in which we
+Perform a modified postorder traversal (or DFS) of the tree, in which we
 recursively compute the result of each operator on its children and return the
 computed value after each child has been visited.
 
@@ -1402,3 +1402,182 @@ E.g.,
     \Return{$l \ x.val \ r$}\;
 }
 \end{algorithm}
+
+### 5-11)
+Make a pass over the input's list of triangles and collect all pairs of indices
+$(i, j), (i, k), (j, k)$ that appear in the triangles. Create a list for each
+of the index pairs and append each triangle that contains a given index pair to
+the corresponding list. Pointers to the lists can be stored in three 2-D arrays
+indexed by the list indices. Now create the adjacency list, using the three 2-D
+arrays to look up adjacencies in $O(1)$ time. This can all be done in $O(n)$ time
+and $O(n)$ space (with substantial constants).
+
+### 5-13)
+#### (a)
+We can start from the bottom of the tree and alternatively skip and select
+vertices to be in our covering set $V'$. Since leaves are a poor choice
+(because they cover at most 2 vertices), we skip the leaves, and then select
+their parents, so that the leaves are still covered. We can then treat the
+parents of the newly selected nodes as leaves and repeat the process. This can
+be achieved with a modified DFS.
+
+#### (b)
+The algorithm of (a) will also work in this case, with the modification that we
+instead select the leaves instead of the parents, since the leaves have degree
+1 while the parents have degree $k+1$ where $k$ is the number of children.
+
+#### (c)
+We can take a dynamic programming approach in which we track the cost of the
+subtree rooted at each node $u$ in a table $cost[u][i]$ where $i \in {0,1}$
+indicates whether we include $u$ itself ($i = 1$) or not ($i = 0$) in the cost.
+Starting from the leaves, set $cost[u][0] = 0$ and $cost[u][1] =
+\operatorname{weight}(u)$. Then, recursing back up the DFS, set $$cost[u][0] =
+\sum_{c \in \operatorname{children}{(u)}} cost[c][1]$$ and $$cost[u][1] =
+\operatorname{weight}{(u)} + \sum_{c \in \operatorname{children}{(u)}}
+\min_i{(c[i])}$$
+Once all vertices have their costs assigned,
+$\operatorname{min}_i{(cost[root][i]})$ is the minimum vertex cover cost. We
+can then find the minimum cover by running another DFS from the root in which
+we add vertices to the cover set according to whether or not their parent
+included them in its optimal cost.
+
+### 5-15)
+Vertex cover requires that we select at least one vertex per edge. Independent
+set requires that we select at most one vertex per edge. Thus we need to select
+exactly one vertex per edge. This is equivalent to determining whether a graph
+admits a two-colouring - that is, determining whether a graph is bipartite.
+
+We can achieve this with a modified BFS in which we assign the source vertex an
+arbitrary colour and then, whenever we discover a new vertex, we assign it the
+opposite colour of its parent. After the BFS completes, if and only if no
+non-tree edge connects two vertices of the same colour is the graph bipartite.
+
+### 5-17)
+#### (a)
+Try all triples $(u, v, w)$ of unique nodes and check if they contain a cycle
+of length 3.
+
+#### (b)
+This requires the graph to be in adjacency matrix form so that we have access
+to $O(1)$ adjacency testing, so convert to that if necessary.
+
+Iterate over each edge $(u, v)$, and for each node $t \in V
+\mathbin{\backslash}\{u, v\}$, test whether it is adjacent to $u$ and $v$. If
+we find such a triple, return true. Otherwise return false. This runs in time
+$O(|V| \cdot |E|)$.
+
+### 5-19)
+We may compute the diameter of a tree by running a modified BFS (DFS would work
+too) on the tree in which we assign distances (edge counts) to vertices
+relative to the root of the BFS tree. The longest path in the tree will be
+between two of the leaves, and at least one of the leaves in the longest path
+will have a maximal distance value assigned to it. Run another BFS starting
+from any of the maximal distance nodes $u$, overwriting the distance values of
+the nodes so that they are now relative to $u$. Any of the the nodes $v$ with a
+maximal distance (which will all be leaves) after this completes is the other
+endpoint of the longest path, and its distance is the diameter of the graph.
+
+The idea behind the proof of this algorithm's correctness is that we can start
+from any arbitrary node $s$, and any node $u$ maximally distant from $s$ is
+guaranteed to be an endpoint of a longest path in the tree. This part is
+annoying to show, so I'm not going to bother. Then the furthest node $v$ from
+$u$ is clearly the other endpoint of a longest path.
+
+Since this algorithm consists of two passes of BFS, it has the same worst-case
+time complexity as BFS: $O(|V| + |E|)$.
+
+### 5-21)
+This can be solved with a combination of BFS and dynamic programming. We'll
+perform a BFS from $v$, maintaining two arrays of size $|V|$: $dist$ and
+$paths$. $dist[i]$ tracks the minimum distance from the source node $v$ to node
+$i$, and $paths[i]$ tracks the number of shortest paths there are from $v$ to
+$i$. For $i \neq w$, initialize $dist[i] = \inf$, and $paths[i] = 0$.
+Initialize $dist[w] = 0$ and $paths[w] = 1$.
+From node $x$, when evaluating an adjacent node $y$ in BFS's "for each adjacent
+node" loop, do the following bookkeeping:
+
+- If $dist[y] = dist[x] + 1$, set $paths[y] = paths[x] + paths[y]$.
+- If $dist[y] > dist[x] + 1$, set $dist[y] = dist[x] + 1$ and
+  $paths[y] = paths[x]$.
+
+Once the BFS completes, return $paths[w]$.
+
+### 5-23)
+#### (a)
+This can be accomplished by topologically sorting the children. Treat the
+statement "$i$ hates $j$" as a dependency of $j$ on $i$: that is, $j$ must come
+before $i$ in the line. Build a graph based on the statements such that if $i$
+hates $j$, there is an edge $(j, i)$. Then topologically sort the graph. If it
+succeeds, then we have our ordering. Otherwise, no ordering exists.
+
+#### (b)
+This answer assumes that the rows do not need to be a uniform width. Given the
+child graph $G = (V, E)$, we can identify subsets $K \in V$ that can be made
+into rows as those nodes for which there is no path in $G$ that contains them
+all nodes in $K$. Partitioning $V$ into as few such subsets as possible yields
+our minimum row count. Topologically sort $G$ to obtain the sequence $v_1,
+\ldots, v_n$. If $G$ isn't a DAG, return false, otherwise run a BFS on $G$
+starting from $v_1$ and label each node with its distance from $v_1$. Nodes
+that are equidistant from $v_1$ \textit{and} appear consecutively in $v_1,
+\ldots, v_n$ can be made into rows. The number of rows is also given by the
+largest distance label plus one. Return the number of rows.
+
+### 5-25)
+Run a topological sort on $G$, ignoring whether or not there are any back
+edges. Then iterate over the sorted vertex sequence $v_1, \ldots, v_n$,
+checking whether there exist edges for each $(v_i, v_{i+1})$. If all such edges
+exist, $G$ contains an arborescense, otherwise it doesn't. This algorithm runs
+in time $O(|V| + |E|)$ since it is essentially DFS.
+
+### 5-27)
+We prove the existence of a Hamiltonian path in every tournament by induction.
+
+Base case: $n$ = 2 (because what kind of tournament has only one participant?).
+Clearly there is a Hamiltonian path in a 2 vertex tournament.
+
+Assumptions: there exists a Hamiltonian path in every tournament on $n$
+vertices.
+
+Inductive step: Consider a tournament on the $n$-node graph $G$. By assumption
+there is a Hamiltonian path $v_1, \ldots, v_n$ in $G$. Now add an another
+vertex $w$ to $G$ and connect it arbitrarily to the other nodes in $G$ such
+that $G$ remains a tournament. There are three possibilities:
+1. There exists an edge $(w, v_1)$. In this case our new Hamiltonian path is
+   $w, v_1, \ldots, v_n$
+2. There exists an edge $(v_n, w)$. In this case our new Hamiltonian path is
+   $v_1, \ldots, v_n, w$
+3. Consider the first node $v_i$ in $v_1, \ldots, v_n$ reachable from $w$.
+   Such a node must exist since the case in which $w$ has no outgoing edges
+   is covered by case 2. Now consider $v_{i-1}$. There must exist an edge
+   $(v_{i-1}, w)$ by the definition of $v_i$. Thus, our new Hamiltonian path
+   is $v_1, \ldots, v_{i-1}, w, v_i, \ldots, v_n$.
+\begin{flushright} \rule{1.2ex}{1.2ex} \end{flushright}
+
+We may obtain the Hamiltonian path by a mergesort-like procedure in which we
+recursively split $V$ into two subsets of roughly equal size until we are down
+to subsets of just one node. Since a single node is its own Hamiltonian path,
+we then work back up the recursion stack, merging Hamiltonian paths according
+to the three rule described in the proof above.
+
+In order to perform fast comparisons, we need the graph to be in adjacency
+matrix form, and thus require $O(n^2)$ time. Once we have the adjacency matrix,
+the algorithm runs in $O(n\lg{n})$ time, since it's essentially mergesort.
+
+### 5-29)
+Perform a DFS (or BFS) on the tree to obtain its DFS tree. Then repeatedly
+prune the leaves of the tree.
+
+### 5-31)
+DFS: stack
+
+BFS: queue
+
+### L5-1)
+https://leetcode.com/problems/minimum-height-trees/
+
+See $\texttt{python/src/l05\_01.py}$.
+
+### L5-3)
+https://leetcode.com/problems/course-schedule/
+
+See $\texttt{python/src/l05\_03.py}$.
