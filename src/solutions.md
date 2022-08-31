@@ -1581,3 +1581,370 @@ See $\texttt{python/src/l05\_01.py}$.
 https://leetcode.com/problems/course-schedule/
 
 See $\texttt{python/src/l05\_03.py}$.
+
+## Chapter 6
+### 6-1)
+#### (a)
+$G_1$:
+```
+1. B-E
+
+2. B-E I-J
+
+     C
+     |
+3. B-E I-J
+
+     C-F
+     |
+4. B-E I-J
+
+     C-F
+     |
+5. B-E G-I-J
+
+     C-F
+     |
+6. B-E G-I-J
+   |
+   D
+
+     C-F
+     |
+7. B-E G-I-J
+   |   |
+   D   H
+
+     C-F
+     |
+8. B-E G-I-J
+   |   |
+ A-D   H
+
+     C-F
+     |
+9. B-E-G-I-J
+   |   |
+ A-D   H
+```
+
+$G_2$:
+```
+1. A-B
+
+2. A-B C
+       |
+       G
+
+
+3. A-B C
+       |
+       G
+
+
+
+   M-N
+
+4. A-B C
+   |   |
+   E   G
+
+
+
+   M-N
+
+5. A-B C
+   |   |
+   E   G
+
+   I
+   |
+   M-N
+
+6. A-B C
+   | | |
+   E F G
+
+   I
+   |
+   M-N
+
+7. A-B C D
+   | | | |
+   E F G H
+
+   I
+   |
+   M-N
+
+8. A-B C D
+   | | | |
+   E F G H
+
+   I J-K
+   |
+   M-N
+
+9. A-B C D
+   | | | |
+   E F G H
+   |
+   I J-K L
+   |
+   M-N
+
+10. A-B C D
+    | | | |
+    E F G H
+    |     |
+    I J-K L
+    |
+    M-N
+
+11. A-B C D
+    | | | |
+    E F G H
+    | |   |
+    I J-K L
+    |
+    M-N
+
+12. A-B C D
+    | | | |
+    E F G H
+    | |   |
+    I J-K L
+    |
+    M-N O-P
+
+13. A-B C D
+    | | | |
+    E F G H
+    | |   |
+    I J-K L
+    |     |
+    M-N O-P
+
+14. A-B C D
+    | | | |
+    E F G H
+    | |   |
+    I J-K L
+    |     |
+    M-N-O-P
+
+15. A-B C D
+    | | | |
+    E F G H
+    | | | |
+    I J-K L
+    |     |
+    M-N-O-P
+```
+
+#### (b)
+$G_1$:
+```
+1. A
+
+2. A-D
+
+3. A-D-B
+
+4. A-D-B-E
+
+5. A-D-B-E-C
+
+6. A-D-B-E-C-F
+
+7. A-D-B-E-C-F
+     |
+     G
+
+8. A-D-B-E-C-F
+     |
+     G-J
+
+9. A-D-B-E-C-F
+     |
+     G-J-I
+
+10. A-D-B-E-C-F
+      |
+      G-J-I
+      |
+      H
+```
+
+$G_2$:
+```
+1. A
+
+2. A-B
+
+3. A-B
+   |
+   E
+
+4. A-B
+   | |
+   E F
+
+5. A-B
+   | |
+   E F
+   |
+   I
+
+6. A-B
+   | |
+   E F
+   |
+   I
+   |
+   M
+
+7. A-B
+   | |
+   E F
+   |
+   I
+   |
+   M-N
+
+8. A-B
+   | |
+   E F
+   | |
+   I J
+   |
+   M-N
+
+9. A-B
+   | |
+   E F
+   | |
+   I J-K
+   |
+   M-N
+
+10. A-B
+    | |
+    E F
+    | |
+    I J-K
+    |
+    M-N-O
+
+11. A-B
+    | |
+    E F
+    | |
+    I J-K
+    |
+    M-N-O-P
+
+12. A-B
+    | |
+    E F
+    | |
+    I J-K L
+    |     |
+    M-N-O-P
+
+13. A-B
+    | |
+    E F   H
+    | |   |
+    I J-K L
+    |     |
+    M-N-O-P
+
+14. A-B   D
+    | |   |
+    E F   H
+    | |   |
+    I J-K L
+    |     |
+    M-N-O-P
+
+15. A-B   D
+    | |   |
+    E F G H
+    | | | |
+    I J-K L
+    |     |
+    M-N-O-P
+
+16. A-B C D
+    | | | |
+    E F G H
+    | | | |
+    I J-K L
+    |     |
+    M-N-O-P
+```
+
+#### (c)
+$G_1$:
+```
+D-G-H
+|
+A-B-C-F
+| |
+I E
+|
+J
+```
+
+$G_2$:
+```
+A-B C-D
+| | |
+E F-G-H
+| |
+I J-K L
+|     |
+M-N-O-P
+```
+
+#### (d)
+$G_1$:
+The maximum flow from A to H is 13. (A min. cut is $AB, AD, GI, IJ$).
+
+$G_2$:
+The maximum flow from A to H is 3. (A min. cut is $AB, AE$).
+
+### 6-3)
+No. Counterexample: consider a triangle graph with $V = \{A, B, C\}$ and
+$\operatorname{weight}{(A, B)} = 2$, $\operatorname{weight}{(B, C)} = 3$, and
+$\operatorname{weight}{(A, C)} = 4$. The MST includes edges $(A, B)$ and $(B,
+C$), but the shortest path from $A$ to $C$ is across edge $(A, C)$.
+
+### 6-5)
+Prim's and Kruskal's algorithms both work even if there are negative edge
+weights. This is because, when building the MST, they only select from edges
+that are not yet in the minimum spanning tree (or forest in the case of
+Kruskal's). Thus they can't get stuck in negative-weight cycles like Dijkstra's
+algorithm can.
+
+### 6-7)
+#### (a)
+Yes, the edges of $T$ still form an MST of $G'$. This is because adding
+$k$ to each edge does not change the relative weightings of the edges.
+
+Proof:
+
+Suppose $T$ had total edge weight $w_{min}$. Then $T'$ has total edge weight
+$w_{min} + k|V-1| \leq w + k|V-1|$ for any $w \geq w_{min}$.
+
+#### (b)
+No, due to the fact that negatively weighted edges may be present.
+
+Counterexample:
+
+Consider the triangle graph $G$ with vertices $A, B, C$ and edges of weight
+$-1$. For $G$, the shortest weighted path from $A$ to $C$ is $A \rightarrow B
+\rightarrow C$ with total weight $-2$. Now add $k=2$ to each edge. The shortest
+path from $A$ to $C$ is now $A \rightarrow C$ with total weight 1.
+
