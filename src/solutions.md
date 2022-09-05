@@ -1491,7 +1491,7 @@ This can be solved with a combination of BFS and dynamic programming. We'll
 perform a BFS from $v$, maintaining two arrays of size $|V|$: $dist$ and
 $paths$. $dist[i]$ tracks the minimum distance from the source node $v$ to node
 $i$, and $paths[i]$ tracks the number of shortest paths there are from $v$ to
-$i$. For $i \neq w$, initialize $dist[i] = \inf$, and $paths[i] = 0$.
+$i$. For $i \neq w$, initialize $dist[i] = \infty$, and $paths[i] = 0$.
 Initialize $dist[w] = 0$ and $paths[w] = 1$.
 From node $x$, when evaluating an adjacent node $y$ in BFS's "for each adjacent
 node" loop, do the following bookkeeping:
@@ -1939,12 +1939,126 @@ Suppose $T$ had total edge weight $w_{min}$. Then $T'$ has total edge weight
 $w_{min} + k|V-1| \leq w + k|V-1|$ for any $w \geq w_{min}$.
 
 #### (b)
-No, due to the fact that negatively weighted edges may be present.
+No, even if negative edges aren't present.
 
 Counterexample:
 
-Consider the triangle graph $G$ with vertices $A, B, C$ and edges of weight
-$-1$. For $G$, the shortest weighted path from $A$ to $C$ is $A \rightarrow B
-\rightarrow C$ with total weight $-2$. Now add $k=2$ to each edge. The shortest
-path from $A$ to $C$ is now $A \rightarrow C$ with total weight 1.
+Consider the triangle graph $G$ with vertices $A, B, C$ and edges of weight $A
+\leftrightarrow B = 1$, $B \leftrightarrow C = 1$, $C \leftrightarrow A = 3$.
+For $G$, the shortest weighted path from $A$ to $C$ is $A \rightarrow B
+\rightarrow C$ with total weight $2$. Now add $k=3$ to each edge. The shortest
+path from $A$ to $C$ is now $A \rightarrow C$ with total weight 6.
+
+### 6-9)
+#### (a)
+This problem isn't just the MST problem because a minimum weight connected
+subset (MWCS) for a graph $G$ may achieve a lower total weight than an MST for
+$G$ since there may be multiple negative weight edges between nodes $u$ and $v$
+which are included in the MWCS but not the MST.
+
+#### (b)
+The MWCS of a graph $G$ may be computed via a modified version of Prim's or
+Kruskal's algorithm in which all negatively weighted edges are added to the
+MWCS before running the main loop of the algorithm.
+
+### 6-11)
+Run Prim's algorithm as usual, but maintain $k$ buckets for each edge in the
+'frontier set' - the  set of edges that join tree and non-tree vertices. Sort
+each bucket internally by vertex id in reverse lexicographic order - i.e., $(2,
+1)$ comes before $(1, 2)$. When it comes time to select the next vertex $v$ to
+bring into the tree, choose the first edge $(u, v)$ in the lowest weighted
+non-empty bucket (located by binary search), then remove all edges with $v$ as
+the endpoint from all buckets, and then add $v$'s frontier edges to the
+buckets.
+
+### 6-13)
+Use a union-find data structure with path compression. The data structure
+consists of two arrays. The first is an array of n elements, $p[]$, in which
+$p[i]$ contains either a pointer to its parent, or a pointer to itself if it
+has no parent. The second is an array of set sizes: $size[i]$ is the size of
+set $i$. Its operations are implemented as follows.
+
+- $\operatorname{union}{(i, j)}$: if $p[i] == p[j]$, do nothing. Otherwise,
+  determine whether the set indicated by $i$ or $j$ is larger by consulting
+  the $size[]$ array. Without loss of generality assume that $j$ is smaller. Then set
+  $p[j] = i$.
+
+- $\operatorname{find}{(i)}$: starting from $p[i]$, walk up the tree implied by
+  $p[]$ until we reach the root located at $p[r]$. Keep track of each node we
+  visit in a temporary array $t[]$. Then for each item $k$ in $t[]$, set $p[k]
+  = r$.
+
+The complexity of the union operation is clearly $O(1)$. The complexity of the
+find operation is initially $O(\lg{n})$, but then becomes $O(1)$ after path
+compression. Initializing the arrays is $O(n)$, so the entire sequence runs in
+time $O(m + n)$.
+
+### 6-15)
+No. See the answer to question 6-7b) for details.
+
+### 6-17)
+#### (a)
+No. Counterexample: consider the triangle graph $G$ with vertices $A, B, C$ and
+edges of weight $A \leftrightarrow B = 2$, $B \leftrightarrow C = 2$, $C
+\leftrightarrow A = 3$. The MST is ${A, B}$ but the shortest path from $A$ to $C$
+is $A \rightarrow C$.
+
+#### (b)
+No. The same counterexample as in part (a) applies.
+
+### 6-19)
+We can use the Floyd-Warshall algorithm essentially unmodified. Run the
+algorithm on $G$ and then inspect the costs to get from a vertex to itself,
+i.e., $weight[i][i]$. Vertices $k$ which are not in any directed cycle will
+have $weight[k][k] = \texttt{MAXINT}$. Otherwise, the cost of the cycle will be
+present.
+
+A vertex $\hat{i} = \arg\min_{i}{(weight[i][i])}$ in a minimal cycle can be
+obtained in $O(n)$ time after execution of the $O(n^3)$ Floyd-Warshall
+algorithm by scanning the main diagonal of $weight[][]$. The minimum cost cycle
+about $i$ can be obtained from a parent matrix $parent[][]$ maintained during
+execution of the algorithm in which, any time we update $weight[i][j]$ because
+of a shorter path through an intermediate node $k$, we set $parent[i][j] = k$.
+The shortest path from $i$ to $j$ is the concatenation of the shortest path
+from $i$ to $k$ with the shortest path from $k$ to $j$. Thus we can recursively
+build up this shortest path given $parent[][]$ as follows:
+
+```python3
+def path(i, j, parent) -> List[int]:
+    if parent[i][j] is None:
+        return [i, j]
+    return path(i, parent[i][j], parent) + path(parent[i][j], j, parent)[1:]
+```
+
+### 6-21)
+Initialize all members of a length $n$ array $d[]$ that stores each vertex's
+distance from $v$ to $\infty$ except for $d[v]$ which should be 0. Initialize
+all members of a length $n$ array $parent[]$ to $\texttt{None}$. Then
+topologically sort $G$ to obtain its topological ordering $u_1, \ldots, u_n$.
+Visit each $u_i, i \geq v$ in sequence. For each outgoing edge $(u_i, w)$, if
+$dist[w] > dist[u_i] + \operatorname{weight}{(u_i, w)}$, set $dist[w]
+\leftarrow dist[u_i] + \operatorname{weight}{(u_i, w)}$ and $parent[w]
+\leftarrow u_i$. $parent[]$ will contain the shortest weighted path tree after
+the algorithm completes.
+
+### 6-23)
+We can use a modified Floyd-Warshall algorithm to find the maximum possible
+arbitrage. See below.
+
+```python3
+def maxarb(m):
+    for k in range(len(m)):
+        for i in range(len(m)):
+            for j in range(len(m)):
+                through_k = m[i][k] * m[k][j]
+                if through_k > m[i][j]:
+                    m[i][j] = through_k
+    return m[0][0]
+```
+
+### 6-25)
+Compute a maximum matching $M$ of $G$ using e.g. the blossom algorithm if $G$
+is a general graph, or Edmonds-Karp if $G$ is bipartite. Then greedily add to
+$M$ edges to any unmatched vertices. With these updates, $M$ now forms a
+minimum edge cover of $G$. The proof follows from Gallai's theorem.
 
