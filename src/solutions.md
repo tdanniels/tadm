@@ -2062,3 +2062,13 @@ is a general graph, or Edmonds-Karp if $G$ is bipartite. Then greedily add to
 $M$ edges to any unmatched vertices. With these updates, $M$ now forms a
 minimum edge cover of $G$. The proof follows from Gallai's theorem.
 
+### L6-1)
+https://leetcode.com/problems/cheapest-flights-within-k-stops/
+
+See $\texttt{python/src/l06\_01.py}$.
+
+### L6-3)
+https://leetcode.com/problems/find-the-city-with-the-smallest-number-of-neighbors-at-a-threshold-distance/
+
+See $\texttt{python/src/l06\_03.py}$.
+
