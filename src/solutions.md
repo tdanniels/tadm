@@ -2072,3 +2072,22 @@ https://leetcode.com/problems/find-the-city-with-the-smallest-number-of-neighbor
 
 See $\texttt{python/src/l06\_03.py}$.
 
+## Chapter 7
+### 7-1)
+A generic implementation of backtracking is given below.
+```{.python include=python/src/combinatorial.py snippet=backtrack}
+```
+
+And here is an implementation of \texttt{derangements} using the backtracking
+framework.
+```{.python include=python/src/combinatorial.py snippet=derangements}
+```
+
+### 7-3)
+A graph isomorphism implementation that incorporates degree-based pruning,
+shortest path matrix-based pruning, and length-$k$ paths-based pruning is given
+below. On my machine it can process a random 100 vertex graph in under 30
+seconds.
+
+```{.python include=python/src/combinatorial.py snippet=graph-isomorphism}
+```

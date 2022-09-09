@@ -1,10 +1,13 @@
 from collections import deque
 
+import copy
 import random
 import timeit
 import unittest
 
 import bst
+import combinatorial
+import graph
 import linkedlist
 import sorting
 
@@ -354,6 +357,76 @@ class TestBST(unittest.TestCase):
         t2 = bst.from_list(l2)
         self.assertTrue(t1 == t11)
         self.assertFalse(t1 == t2)
+
+
+class TestCombinatorial(unittest.TestCase):
+    def test_derangements(self):
+        for n, d in [[1, []], [2, [[2, 1]]], [3, [[2, 3, 1], [3, 1, 2]]]]:
+            self.assertEqual(combinatorial.derangements(n), d)
+
+    def test_graph_isomorphism(self):
+        for g, h, iso in (
+            (
+                [[0, 1, 1], [1, 0, 1], [1, 1, 0]],
+                [[0, 1, 1], [1, 0, 1], [1, 1, 0]],
+                True,
+            ),
+            (
+                [[0, 1, 1], [1, 0, 1], [1, 1, 0]],
+                [[0, 1, 1], [1, 0, 1], [0, 1, 0]],
+                False,
+            ),
+            (
+                [[0, 1, 1, 0], [1, 0, 1, 0], [1, 1, 0, 1], [0, 0, 1, 0]],
+                [[0, 1, 0, 1], [1, 0, 0, 1], [0, 0, 0, 1], [1, 1, 1, 0]],
+                True,
+            ),
+            (
+                [[0, 1, 1, 0], [1, 0, 1, 0], [1, 1, 0, 1], [0, 0, 1, 0]],
+                [[0, 1, 0, 1], [1, 0, 0, 1], [0, 1, 0, 0], [1, 1, 1, 0]],
+                False,
+            ),
+        ):
+            self.assertEqual(combinatorial.graph_isomorphism(g, h), iso)
+
+    @unittest.skip("slow")
+    def test_graph_isomorphism_big(self):
+        random.seed(314159)
+        r1 = graph.random_adj_matrix(100)
+        r2 = copy.deepcopy(r1)
+        r2[70][75] ^= 1
+        r2[75][70] ^= 1
+        for g, h, iso in (
+            (r1, r1, True),
+            (r1, r2, False),
+        ):
+            self.assertEqual(combinatorial.graph_isomorphism(g, h), iso)
+
+
+class TestGraph(unittest.TestCase):
+    def test_floyd_warshall(self):
+        g = [[0, 1, 1], [1, 0, 1], [1, 1, 0]]
+        spm = graph.floyd_warshall(g, False)
+        self.assertEqual([[2, 1, 1], [1, 2, 1], [1, 1, 2]], spm)
+        spm = graph.floyd_warshall(g)
+        self.assertEqual([[0, 1, 1], [1, 0, 1], [1, 1, 0]], spm)
+
+    def test_random_adj_matrix(self):
+        random.seed(314159)
+        n = 7
+        m = graph.random_adj_matrix(n)
+        for i in range(n):
+            for j in range(n):
+                self.assertEqual(m[i][j], m[j][i])
+
+    def test_adj_matrix_multiply(self):
+        m1 = [[1, 0, 0], [0, 1, 0], [0, 0, 1]]
+        self.assertEqual(graph.adj_matrix_multiply(m1, m1), m1)
+        m2 = [[1, 3, 1], [2, 1, -1], [5, 0, 1]]
+        m3 = [[0, 2, 6], [-3, 2, 0], [3, 1, 4]]
+        self.assertEqual(
+            graph.adj_matrix_multiply(m2, m3), [[-6, 9, 10], [-6, 5, 8], [3, 11, 34]]
+        )
 
 
 class TestLinkedList(unittest.TestCase):
