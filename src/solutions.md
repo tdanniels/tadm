@@ -2091,3 +2091,31 @@ seconds.
 
 ```{.python include=python/src/combinatorial.py snippet=graph-isomorphism}
 ```
+
+### 7-5)
+An unoptimized subgraph isomorphism implementation is given below. On my
+machine it can prove that $K_{10}$ is a subgraph of $K_{20}$ in about 19
+seconds.
+
+```{.python include=python/src/combinatorial.py snippet=subgraph-isomorphism}
+```
+
+Implementations of Hamiltonian Cycle, Clique, Independent Set, and Graph
+Isomorphism in terms of Subgraph Isomorphism are given below.
+
+```{.python include=python/src/combinatorial.py snippet=subgraph-isomorphism-subproblems}
+```
+
+The performance of Hamiltonian Cycle is quite poor. On my machine it takes
+about 5 seconds to check if $K_7$ has a Hamiltonian Cycle. Clique is even
+worse: it took 87 seconds to find a size 6 clique in $K_7$ with one edge
+deleted on my machine. Independent Set fares no better on worst case inputs,
+which is understandable given that it is essentially Clique. Finally, Graph
+Isomorphism fares a little better, processing a random 11 vertex graph in under
+2 seconds, though this is still far worse than the specialized algorithm from
+problem 7-3.
+
+Performance could likely be improved substantially with better pruning (not to
+mention a programming language better suited to CPU-bound computations).
+
+

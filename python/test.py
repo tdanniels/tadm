@@ -1,6 +1,7 @@
 from collections import deque
 
 import copy
+import itertools
 import random
 import timeit
 import unittest
@@ -364,7 +365,15 @@ class TestCombinatorial(unittest.TestCase):
         for n, d in [[1, []], [2, [[2, 1]]], [3, [[2, 3, 1], [3, 1, 2]]]]:
             self.assertEqual(combinatorial.derangements(n), d)
 
+    def test_combinations(self):
+        for n, k in itertools.product(range(10), range(10)):
+            self.assertEqual(
+                combinatorial.combinations(n, k),
+                list(itertools.combinations(range(n), k)),
+            )
+
     def test_graph_isomorphism(self):
+        random.seed(314159)
         for g, h, iso in (
             (
                 [[0, 1, 1], [1, 0, 1], [1, 1, 0]],
@@ -373,8 +382,18 @@ class TestCombinatorial(unittest.TestCase):
             ),
             (
                 [[0, 1, 1], [1, 0, 1], [1, 1, 0]],
+                graph.randomly_permute_vertices([[0, 1, 1], [1, 0, 1], [1, 1, 0]]),
+                True,
+            ),
+            (
+                [[0, 1, 1], [1, 0, 1], [1, 1, 0]],
                 [[0, 1, 1], [1, 0, 1], [0, 1, 0]],
                 False,
+            ),
+            (
+                [[0, 1, 1, 0], [1, 0, 1, 0], [1, 1, 0, 1], [0, 0, 1, 0]],
+                [[0, 1, 0, 1], [1, 0, 0, 1], [0, 0, 0, 1], [1, 1, 1, 0]],
+                True,
             ),
             (
                 [[0, 1, 1, 0], [1, 0, 1, 0], [1, 1, 0, 1], [0, 0, 1, 0]],
@@ -392,15 +411,145 @@ class TestCombinatorial(unittest.TestCase):
     @unittest.skip("slow")
     def test_graph_isomorphism_big(self):
         random.seed(314159)
-        r1 = graph.random_adj_matrix(100)
-        r2 = copy.deepcopy(r1)
-        r2[70][75] ^= 1
-        r2[75][70] ^= 1
+        n = 100
+        r1 = graph.random_adj_matrix(n)
+        r1p = graph.randomly_permute_vertices((copy.deepcopy(r1)))
+        r1pm = copy.deepcopy(r1p)
+        r1pm[70][75] ^= 1
+        r1pm[75][70] ^= 1
         for g, h, iso in (
-            (r1, r1, True),
-            (r1, r2, False),
+            (r1, r1p, True),
+            (r1, r1pm, False),
         ):
             self.assertEqual(combinatorial.graph_isomorphism(g, h), iso)
+
+    def test_subgraph_isomorphism(self):
+        for g, h, iso in (
+            (
+                graph.k_n(2),
+                [[0, 0, 0], [0, 0, 1], [0, 1, 0]],
+                True,
+            ),
+            (
+                graph.k_n(3),
+                graph.k_n(3),
+                True,
+            ),
+            (
+                graph.k_n(3),
+                [[0, 1, 1], [1, 0, 1], [1, 1, 0]],
+                True,
+            ),
+            # K_3 isn't a subgraph of a 4 vertex square
+            (
+                graph.k_n(3),
+                [[0, 1, 1, 0], [1, 0, 0, 1], [1, 0, 0, 1], [0, 1, 1, 0]],
+                False,
+            ),
+            (
+                graph.k_n(3),
+                graph.k_n(4),
+                True,
+            ),
+            (
+                graph.k_n(4),
+                graph.k_n(3),
+                False,
+            ),
+            (
+                graph.k_n(4),
+                graph.k_n(7),
+                True,
+            ),
+        ):
+            self.assertEqual(combinatorial.subgraph_isomorphism(g, h), iso)
+
+    def test_hamiltonian_cycle_sgi(self):
+        for g, cyc in (
+            (
+                graph.k_n(5),
+                True,
+            ),
+            (
+                [
+                    [0, 1, 0],
+                    [1, 0, 1],
+                    [0, 1, 0],
+                ],
+                False,
+            ),
+        ):
+            self.assertEqual(combinatorial.hamiltonian_cycle_sgi(g), cyc)
+
+    def test_clique_sgi(self):
+        k_5d = graph.k_n(5)
+        k_5d[2][3] = 0
+        k_5d[3][2] = 0
+        for g, clique in (
+            (
+                graph.k_n(7),
+                7,
+            ),
+            (
+                k_5d,
+                4,
+            ),
+            (
+                [
+                    [0, 0, 0],
+                    [0, 0, 1],
+                    [0, 1, 0],
+                ],
+                2,
+            ),
+            (
+                [
+                    [0, 1, 0],
+                    [1, 0, 1],
+                    [0, 1, 0],
+                ],
+                2,
+            ),
+        ):
+            self.assertEqual(combinatorial.clique_sgi(g), clique)
+
+    def test_independent_set_sgi(self):
+        k_5d = graph.k_n(5)
+        k_5d[2][3] = 0
+        k_5d[3][2] = 0
+        for g, indset in (
+            (
+                graph.k_n(7),
+                1,
+            ),
+            (
+                k_5d,
+                2,
+            ),
+            (
+                [
+                    [0, 1, 0],
+                    [1, 0, 1],
+                    [0, 1, 0],
+                ],
+                2,
+            ),
+        ):
+            self.assertEqual(combinatorial.independent_set_sgi(g), indset)
+
+    def test_graph_isomorphism_sgi(self):
+        random.seed(314159)
+        n = 5
+        r1 = graph.random_adj_matrix(n)
+        r1p = graph.randomly_permute_vertices((copy.deepcopy(r1)))
+        r1pm = copy.deepcopy(r1p)
+        r1pm[0][2] ^= 1
+        r1pm[2][0] ^= 1
+        for g, h, iso in (
+            (r1, r1p, True),
+            (r1, r1pm, False),
+        ):
+            self.assertEqual(combinatorial.graph_isomorphism_sgi(g, h), iso)
 
 
 class TestGraph(unittest.TestCase):
@@ -421,12 +570,10 @@ class TestGraph(unittest.TestCase):
 
     def test_adj_matrix_multiply(self):
         m1 = [[1, 0, 0], [0, 1, 0], [0, 0, 1]]
-        self.assertEqual(graph.adj_matrix_multiply(m1, m1), m1)
+        self.assertEqual(graph.mul_adj(m1, m1), m1)
         m2 = [[1, 3, 1], [2, 1, -1], [5, 0, 1]]
         m3 = [[0, 2, 6], [-3, 2, 0], [3, 1, 4]]
-        self.assertEqual(
-            graph.adj_matrix_multiply(m2, m3), [[-6, 9, 10], [-6, 5, 8], [3, 11, 34]]
-        )
+        self.assertEqual(graph.mul_adj(m2, m3), [[-6, 9, 10], [-6, 5, 8], [3, 11, 34]])
 
 
 class TestLinkedList(unittest.TestCase):
