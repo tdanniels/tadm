@@ -551,6 +551,65 @@ class TestCombinatorial(unittest.TestCase):
         ):
             self.assertEqual(combinatorial.graph_isomorphism_sgi(g, h), iso)
 
+    def test_bandwidth_reduction(self):
+        random.seed(314159)
+        gl = [[7], [6, 7], [5, 6], [4, 5], [3], [2, 3], [1, 2], [0, 1]]
+        opt = 1
+        p = [0, 7, 1, 6, 2, 5, 3, 4]
+
+        # Test heuristic starter solution
+        s = combinatorial.BandwidthReductionSolver(gl)
+        self.assertEqual(s.out, opt)
+        self.assertEqual(s.p, p)
+
+        # Test backtracking solution
+        self.assertEqual(combinatorial.bandwidth_reduction(gl)[1], opt)
+
+        gl = graph.random_adj_list(10)
+        s = combinatorial.BandwidthReductionSolver(gl)
+        sout = s.out
+        spm = s.p[:]
+        cpm, cout = combinatorial.bandwidth_reduction(gl)
+        if cout < sout:
+            print(f"cout={cout}, s.out={sout}, cpm={cpm}, spm={spm}")
+        self.assertLessEqual(cout, sout)
+
+    def test_max_clique(self):
+        gl = [
+            [1, 2, 6],
+            [0, 3, 5],
+            [0, 3, 4, 5],
+            [1, 2, 4, 5],
+            [2, 3, 5, 6],
+            [2, 3, 4, 7],
+            [0, 4, 7],
+            [1, 5, 6],
+        ]
+        opt = 4
+        self.assertEqual(combinatorial.max_clique(gl), opt)
+
+        gl = [
+            [1, 2, 3],
+            [0, 2, 3],
+            [0, 1, 3],
+            [0, 1, 2],
+        ]
+        opt = 4
+        self.assertEqual(combinatorial.max_clique(gl), opt)
+
+        gl = [
+            [1, 2, 3],
+            [0, 2, 3],
+            [0, 1, 3],
+            [0, 1],
+        ]
+        opt = 3
+        self.assertEqual(combinatorial.max_clique(gl), opt)
+
+        gl = []
+        opt = 0
+        self.assertEqual(combinatorial.max_clique(gl), opt)
+
 
 class TestGraph(unittest.TestCase):
     def test_floyd_warshall(self):
@@ -574,6 +633,25 @@ class TestGraph(unittest.TestCase):
         m2 = [[1, 3, 1], [2, 1, -1], [5, 0, 1]]
         m3 = [[0, 2, 6], [-3, 2, 0], [3, 1, 4]]
         self.assertEqual(graph.mul_adj(m2, m3), [[-6, 9, 10], [-6, 5, 8], [3, 11, 34]])
+
+    def test_filtered_adj_list(self):
+        gl = [[1, 2], [0, 3], [0, 3], [1, 2]]
+
+        keep = []
+        fgl = graph.filtered_adj_list(gl, keep)
+        self.assertEqual(fgl, [])
+
+        keep = [1, 3]
+        fgl = graph.filtered_adj_list(gl, keep)
+        self.assertEqual(fgl, [[1], [0]])
+
+        keep = [1, 2, 3]
+        fgl = graph.filtered_adj_list(gl, keep)
+        self.assertEqual(fgl, [[2], [2], [0, 1]])
+
+        keep = [0, 1, 2, 3]
+        fgl = graph.filtered_adj_list(gl, keep)
+        self.assertEqual(fgl, [[1, 2], [0, 3], [0, 3], [1, 2]])
 
 
 class TestLinkedList(unittest.TestCase):

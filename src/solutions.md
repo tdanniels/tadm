@@ -119,7 +119,7 @@ compared and swapped if necessary.
 \begin{flushright} \rule{1.2ex}{1.2ex} \end{flushright}
 
 ### 1-11)
-**Base case:** $n = 0$. In this case we have an empty sum, which equates to zero.
+Base case: $n = 0$. In this case we have an empty sum, which equates to zero.
 This matches the closed form's value at $n = 0$ and thus the base case is proven.
 
 Assumptions: the given summation is equal to $n(n+1)(2n+1)/6$ for $n = k-1$.
@@ -2118,4 +2118,19 @@ problem 7-3.
 Performance could likely be improved substantially with better pruning (not to
 mention a programming language better suited to CPU-bound computations).
 
+### 7-7)
+An algorithm for solving the bandwidth minimization problem is given below. It
+starts with a heuristic solution and then finds the exact solution with
+branch-and-bound, following the recommendations of section 13.2 of the text. On
+my machine it can solve a random 40-vertex instance in about 25 seconds.
 
+```{.python include=python/src/combinatorial.py snippet=bandwidth-reduction}
+```
+
+### 7-9)
+An implementation of Max Clique is given below. On my machine it can solve
+random instances on 25 vertices in about 35 seconds, which is substantially
+better than the subgraph isomorphism-based version from problem 7-5.
+
+```{.python include=python/src/combinatorial.py snippet=max-clique}
+```

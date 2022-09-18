@@ -1,5 +1,6 @@
 import copy
 import itertools
+from math import inf
 from typing import List, Tuple
 
 import graph
@@ -188,7 +189,8 @@ class SubgraphIsomorphismSolver(Solver):
         self.n = len(g)
         self.g = g
         self.h = h
-        self.deg_g = [len(list(filter(None, g[i]))) for i in range(self.n)]
+        self.deg_g = [len(list(filter(None, g[i]))) for i in range(len(g))]
+        self.deg_h = [len(list(filter(None, h[i]))) for i in range(len(h))]
         self.edges_h = [
             [j for j, e in enumerate(h[i]) if e != 0] for i in range(len(h))
         ]
@@ -217,7 +219,7 @@ class SubgraphIsomorphismSolver(Solver):
             in_subg[a[i + 1][0]] = True
 
         for v in range(len(self.h)):
-            if in_subg[v]:
+            if in_subg[v] or self.deg_g[k - 1] > self.deg_h[v]:
                 continue
             for es in itertools.combinations(self.edges_h[v], self.deg_g[k - 1]):
                 cands.append((v, es))
@@ -274,3 +276,174 @@ def graph_isomorphism_sgi(g, h) -> bool:
 
 
 # end snippet subgraph-isomorphism-subproblems
+
+
+# start snippet bandwidth-reduction
+def alternating_backtrack(a, k, finished, solver):
+    if solver.is_soln(a, k, finished):
+        solver.process_soln(a, k, finished)
+    else:
+        k += 1
+        cands = solver.construct_cands(a, k, finished)
+        for cand in cands:
+            a[next_alternating_k(k, len(a))] = cand
+            solver.make_move(a, k, finished)
+            alternating_backtrack(a, k, finished, solver)
+            solver.unmake_move(a, k, finished)
+            if finished[0]:
+                return
+
+
+def next_alternating_k(k, n) -> int:
+    if k % 2:
+        return 1 + k // 2
+    else:
+        return n - k // 2
+
+
+class BandwidthReductionSolver(Solver):
+    def __init__(self, g):
+        # NOTE: g is in adjacency list form.
+        # TODO: abstract over + clearly distinguish between adjacency list and
+        # adjacency matrix forms in the combinatorial and graph modules.
+        self.g = g
+        self.n = len(g)
+        self.p, self.out = self.heuristic()
+
+    def is_soln(self, a, k, finished):
+        return k == self.n
+
+    def process_soln(self, a, k, finished):
+        if (c := self.cost(a)) < self.out:
+            self.p = a[1:]
+            self.out = c
+
+    def construct_cands(self, a, k, finished):
+        cands = []
+        in_a = [False for _ in range(self.n)]
+        for i in range(1, k):
+            ofs = next_alternating_k(i, self.n + 1)
+            in_a[a[ofs]] = True
+        for i in range(self.n):
+            if not in_a[i]:
+                aprime = a[:]
+                aprime[next_alternating_k(k, len(a))] = i
+                if self.cost(aprime) < self.out:
+                    cands.append(i)
+        return cands
+
+    def unmake_move(self, a, k, finished):
+        a[next_alternating_k(k, len(a))] = None
+
+    def heuristic(self):
+        gs = []
+        gsc = inf
+        for u in range(self.n):
+            s = [u]
+            ds, _ = graph.bfs_adj_list(self.g, u)
+            for du in range(1, self.n):
+                app = False
+                for v, d in enumerate(ds):
+                    if d == du:
+                        s.append(v)
+                        app = True
+                if not app:
+                    break
+            # Sort vertices of equal distance from u based on their degree.
+            i = 1
+            j = 1
+            dstart = ds[i]
+            while j < len(s) - 1:
+                j += 1
+                if ds[j] > dstart or j == len(s) - 1:
+                    s[i:j] = sorted(s[i:j], key=lambda x: len(self.g[x]))
+                    i = j
+                    dstart = ds[j]
+            if (sc := self.cost(s)) < gsc:
+                gs = s
+                gsc = sc
+        return gs, gsc
+
+    def cost(self, a):
+        inv = [None] * len(a)
+        for i, v in enumerate(a):
+            if v is not None:
+                inv[v] = i
+        maxcost = 0
+        for u in range(len(a)):
+            if inv[u] is None:
+                continue
+            for v in self.g[u]:
+                if inv[v] is None:
+                    continue
+                maxcost = max(abs(inv[u] - inv[v]), maxcost)
+        return maxcost
+
+
+def bandwidth_reduction(g) -> int:
+    a = [None] * (len(g) + 1)
+    finished = [False]
+    s = BandwidthReductionSolver(g)
+    alternating_backtrack(a, 0, finished, s)
+    return s.p, s.out
+
+
+# end snippet bandwidth-reduction
+
+# start snippet max-clique
+class MaxCliqueSolver(Solver):
+    def __init__(self, g):
+        self.g = g
+        self.gm = graph.unweighted_adj_list_to_matrix(g)
+        self.n = len(g)
+        self.out = False
+
+    def is_soln(self, a, k, finished):
+        return k == len(a) - 1
+
+    def process_soln(self, a, k, finished):
+        self.out = True
+        finished[0] = True
+
+    def construct_cands(self, a, k, finished):
+        cands = []
+        in_clique = [False for _ in range(self.n)]
+        for i in range(1, k):
+            in_clique[a[i]] = True
+
+        for i in range(self.n):
+            include = True
+            if in_clique[i]:
+                continue
+            for j in a[1:k]:
+                if not self.gm[i][j]:
+                    include = False
+                    break
+            if include:
+                cands.append(i)
+        return cands
+
+
+def max_clique(g) -> int:
+    # NOTE: g is in adjacency list form.
+    c = 0
+    d = [len(e) for _, e in enumerate(g)]
+    sd = sorted(d, reverse=True)
+    for k in range(1, len(g) + 1):
+        finished = [False]
+        a = [None] * (k + 1)
+        j = 0
+        for i in range(len(sd)):
+            if i >= k - 1 and sd[i] > j - 1:
+                j = max(j, i)
+        keep = [v for v in range(len(g)) if d[v] >= j]
+        gprime = graph.filtered_adj_list(g, keep)
+        s = MaxCliqueSolver(gprime)
+        backtrack(a, 0, finished, s)
+        if not s.out:
+            break
+        c = k
+    return c
+
+
+# end snippet max-clique
