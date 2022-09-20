@@ -77,6 +77,7 @@ def derangements(n) -> List[int]:
 # end snippet derangements
 
 
+# start snippet list-combinations
 class CombinationsSolver(Solver):
     def __init__(self, n, r):
         self.n = n
@@ -104,6 +105,9 @@ def combinations(n, r) -> List[Tuple[int]]:
     s = CombinationsSolver(n, r)
     backtrack(a, 0, finished, s)
     return s.out
+
+
+# end snippet list-combinations
 
 
 # start snippet graph-isomorphism
@@ -447,3 +451,104 @@ def max_clique(g) -> int:
 
 
 # end snippet max-clique
+
+# start snippet edge-coloring
+class EdgeColoringSolver(Solver):
+    def __init__(self, g, gamma):
+        self.g = g
+        self.gamma = gamma
+        self.edges = [(u, v) for u in range(len(self.g)) for v in g[u] if u < v]
+        self.out = False
+
+    def is_soln(self, a, k, finished):
+        return k == len(a) - 1
+
+    def process_soln(self, a, k, finished):
+        self.out = True
+        finished[0] = True
+
+    def construct_cands(self, a, k, finished):
+        cands = []
+        color_available = [True for _ in range(self.gamma)]
+        u, v = self.edges[k - 1]
+        for i, (s, t) in enumerate(self.edges[:k]):
+            if s == u or t == v:
+                color_available[a[i + 1]] = False
+
+        for color in range(self.gamma):
+            if color_available[color]:
+                cands.append(color)
+        return cands
+
+
+def edge_coloring(g) -> int:
+    # NOTE: g is in adjacency list form and assumed to be undirected.
+    d = [len(e) for _, e in enumerate(g)]
+    num_edges = sum(d) // 2
+    delta = max(d)
+    for gamma in (delta, delta + 1):
+        a = [0] * (num_edges + 1)
+        finished = [False]
+        s = EdgeColoringSolver(g, gamma)
+        backtrack(a, 0, finished, s)
+        if s.out:
+            return gamma
+    raise ValueError("Graph g must have chromatic index in {delta(g), delta(g) + 1}")
+
+
+# end snippet edge-coloring
+
+# start snippet set-cover
+class SetCoverSolver(Solver):
+    def __init__(self, ss, n):
+        self.ss = ss
+        self.n = n
+        self.out = inf
+
+    def is_soln(self, a, k, finished):
+        covered = [False] * self.n
+        for i in range(1, k + 1):
+            for v in self.ss[a[i]]:
+                covered[v] = True
+        return all(covered)
+
+    def process_soln(self, a, k, finished):
+        print(a[1 : k + 1])
+        if k < self.out:
+            self.out = k
+
+    def construct_cands(self, a, k, finished):
+        cands = []
+        if k < self.out:
+            in_cover = [False] * len(self.ss)
+            for s in a[1:k]:
+                in_cover[s] = True
+
+            for i in range(len(self.ss)):
+                if i >= k - 1 and not in_cover[i]:
+                    cands.append(i)
+        return cands
+
+
+def set_cover(ss, n) -> int:
+    a = [None] * (len(ss) + 1)
+    finished = [False]
+
+    # Eliminate strict subsets
+    sss = [set(s) for s in ss]
+    ss2 = []
+    for i in range(len(sss)):
+        include = True
+        for j in range(len(sss)):
+            if i != j and sss[i].issubset(sss[j]):
+                include = False
+                break
+        if include:
+            ss2.append(ss[i])
+
+    s = SetCoverSolver(ss2, n)
+    backtrack(a, 0, finished, s)
+    return s.out
+
+
+# end snippet set-cover

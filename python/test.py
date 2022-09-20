@@ -610,6 +610,39 @@ class TestCombinatorial(unittest.TestCase):
         opt = 0
         self.assertEqual(combinatorial.max_clique(gl), opt)
 
+    def test_edge_coloring(self):
+        gl = [
+            [1, 2, 6],
+            [0, 3, 5],
+            [0, 3, 4, 5],
+            [1, 2, 4, 5],
+            [2, 3, 5, 6],
+            [2, 3, 4, 7],
+            [0, 4, 7],
+            [1, 5, 6],
+        ]
+        opt = 4
+        self.assertEqual(combinatorial.edge_coloring(gl), opt)
+
+        gl = graph.unweighted_adj_matrix_to_list(graph.k_n(3))
+        opt = 3
+        self.assertEqual(combinatorial.edge_coloring(gl), opt)
+
+        gl = graph.unweighted_adj_matrix_to_list(graph.k_n(4))
+        opt = 3
+        self.assertEqual(combinatorial.edge_coloring(gl), opt)
+
+    def test_set_cover(self):
+        ss = [[0, 1], [1, 2], [0, 2], [2, 3]]
+        n = 4
+        opt = 2
+        self.assertEqual(combinatorial.set_cover(ss, n), opt)
+
+        ss = [[0, 2], [1], [0, 3], [2, 3]]
+        n = 4
+        opt = 3
+        self.assertEqual(combinatorial.set_cover(ss, n), opt)
+
 
 class TestGraph(unittest.TestCase):
     def test_floyd_warshall(self):

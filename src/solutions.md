@@ -2134,3 +2134,27 @@ better than the subgraph isomorphism-based version from problem 7-5.
 
 ```{.python include=python/src/combinatorial.py snippet=max-clique}
 ```
+
+### 7-11)
+An implementation of an exact solver for the edge coloring problem is given
+below. Somewhat surprisingly, on my machine it can handle random graphs on
+hundreds of vertices in a few seconds, though it requires an increase to the
+maximum allowed CPython recursion depth.
+
+```{.python include=python/src/combinatorial.py snippet=edge-coloring}
+```
+
+### 7-13)
+An implementation of Set Cover is given below. It can solve moderately
+difficult instances with $n = 17$ and $|S| = 22$ in about 13 seconds on my
+machine.
+
+```{.python include=python/src/combinatorial.py snippet=set-cover}
+```
+
+
+### 7-15)
+```{.python include=python/src/combinatorial.py snippet=list-combinations}
+```
+
+### 7-17)
