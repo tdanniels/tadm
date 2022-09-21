@@ -2158,3 +2158,34 @@ machine.
 ```
 
 ### 7-17)
+```{.python include=python/src/combinatorial.py snippet=keypad-words}
+```
+
+### 7-19)
+Based on the first call to rng04, construct a tree with four branches, each
+corresponding to one of the outcomes 0, 1, 2, and 3. If we get a 4, retry until
+we get something else. Label these branches $00, 01, 10$, and $11$. Now call
+rng04 again until it returns another outcome less than 4 to obtain our final
+bit of entropy by, e.g., setting it to 1 if the outcome if odd and 0 otherwise.
+After concatentation with the previous bits, this yields an equiprobable value
+between 0 and 7. The expected number of calls $E(\text{calls})$ is given by
+\begin{align*}
+E(\text{calls}) &= 2 \left(1 \cdot p(\text{one call required})
+                 + 2 \cdot p(\text{two calls required}) + \dots \right) \\
+&= 2 \left(p + 2p(1-p) + 3p(1-p)^2 + \dots \right) \\
+&= 2 \sum_{i=0}^\infty (i+1)p(1-p)^i \\
+&= \frac{2}{p}
+\end{align*}
+because the expected value of the number of independent trials to get the first
+success for a geometrically distributed variable with parameter $p$ is $1/p$.
+Since in our case $p = 0.8$, $E(\text{calls}) = 2/0.8 = 2.5$.
+
+### L7-1)
+https://leetcode.com/problems/subsets/
+
+See $\texttt{python/src/l07\_01.py}$.
+
+### L7-3)
+https://leetcode.com/problems/word-search/
+
+See $\texttt{python/src/l07\_03.py}$.

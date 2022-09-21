@@ -4,6 +4,7 @@ from math import inf
 from typing import List, Tuple
 
 import graph
+from trie import Trie
 
 
 # start snippet backtrack
@@ -552,3 +553,52 @@ def set_cover(ss, n) -> int:
 
 
 # end snippet set-cover
+
+# start snippet keypad-words
+class KeypadWordsSolver(Solver):
+    digit2chars = {
+        1: ["_", ",", "@"],
+        2: ["a", "b", "c"],
+        3: ["d", "e", "f"],
+        4: ["g", "h", "i"],
+        5: ["j", "k", "l"],
+        6: ["m", "n", "o"],
+        7: ["p", "q", "r", "s"],
+        8: ["t", "u", "v"],
+        9: ["w", "x", "y", "z"],
+        0: [" "],
+    }
+
+    def __init__(self, digit_seq, wordtrie):
+        self.digit_seq = digit_seq
+        self.wordtrie = wordtrie
+        self.n = len(digit_seq)
+        self.out = []
+
+    def is_soln(self, a, k, finished):
+        return k == self.n and self.wordtrie.is_leaf(a[1 : k + 1])
+
+    def process_soln(self, a, k, finished):
+        self.out.append("".join(a[1:]))
+
+    def construct_cands(self, a, k, finished):
+        cands = []
+        if k <= len(self.digit_seq):
+            for c in self.digit2chars[self.digit_seq[k - 1]]:
+                new_prefix = a[1:k]
+                new_prefix.append(c)
+                if new_prefix in self.wordtrie:
+                    cands.append(c)
+        return cands
+
+
+def keypad_words(digit_seq: [int], dictionary: [str]) -> [str]:
+    a = ["."] * (len(digit_seq) + 1)
+    finished = [False]
+    t = Trie(dictionary)
+    s = KeypadWordsSolver(digit_seq, t)
+    backtrack(a, 0, finished, s)
+    return s.out
+
+
+# end snippet keypad-words

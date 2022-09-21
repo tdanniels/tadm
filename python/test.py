@@ -11,6 +11,7 @@ import combinatorial
 import graph
 import linkedlist
 import sorting
+import trie
 
 import l02_01
 import l02_03
@@ -643,6 +644,39 @@ class TestCombinatorial(unittest.TestCase):
         opt = 3
         self.assertEqual(combinatorial.set_cover(ss, n), opt)
 
+    def test_keypad_words(self):
+        dictionary = [
+            "ace",
+            "ad",
+            "add",
+            "bad",
+            "be",
+            "bee",
+            "cab",
+            "cad",
+            "dab",
+            "dad",
+            "fab",
+            "fad",
+            "fed",
+        ]
+        seq = [2, 2]
+        self.assertEqual(combinatorial.keypad_words(seq, dictionary), [])
+
+        seq = [2, 3]
+        self.assertEqual(combinatorial.keypad_words(seq, dictionary), ["ad", "be"])
+
+        seq = [3, 2]
+        self.assertEqual(combinatorial.keypad_words(seq, dictionary), [])
+
+        seq = [3, 3]
+        self.assertEqual(combinatorial.keypad_words(seq, dictionary), [])
+
+        seq = [2, 2, 3]
+        self.assertEqual(
+            combinatorial.keypad_words(seq, dictionary), ["ace", "bad", "cad"]
+        )
+
 
 class TestGraph(unittest.TestCase):
     def test_floyd_warshall(self):
@@ -749,6 +783,23 @@ class TestSorting(unittest.TestCase):
                     baselines.append(s_copy)
                 else:
                     self.assertEqual(s_copy, baselines[j])
+
+
+class TestTrie(unittest.TestCase):
+    def test(self):
+        words = ["abc", "abd", "bad", "bay"]
+        t = trie.Trie(words)
+        for word in words:
+            self.assertTrue(word in t)
+            self.assertTrue(t.is_leaf(word))
+
+        for stem in ["a", "ab", "b", "ba"]:
+            self.assertTrue(stem in t)
+            self.assertFalse(t.is_leaf(stem))
+
+        for notstem in ["c", "ad", "aba", "aby"]:
+            self.assertFalse(notstem in t)
+            self.assertTrue(notstem not in t)
 
 
 if __name__ == "__main__":
