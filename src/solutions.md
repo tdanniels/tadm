@@ -2189,3 +2189,65 @@ See $\texttt{python/src/l07\_01.py}$.
 https://leetcode.com/problems/word-search/
 
 See $\texttt{python/src/l07\_03.py}$.
+
+## Chapter 8
+
+### 10-1) (from TADM 3e)
+The number of ways to reach stair $i$ is given by the following recurrence:
+
+\begin{align*}
+s_{i < 0} &= 0 \\
+s_0 &= 1 \\
+s_1 &= 1 \\
+s_i &= \sum_{j=i-k}^{i-1}s_j
+\end{align*}
+
+We may compute $s_n$ by computing and memoizing $s_i$ in the order $i = 2,
+3, \dots, n$ in $\Theta(kn)$ total time.
+
+### 10-3) (from TADM 3e)
+The number of shot distributions that sum to $n$ is given by the
+following recurrence:
+
+\begin{align*}
+s_0 &= 1 \\
+s_1 &= 1 \\
+s_i &= s_{i-1} + \lfloor i/6 \rfloor +
+    \begin{cases}
+        0 &\text{if $i-1 \mod 6 \equiv 0$} \\
+        1 &\text{otherwise}
+    \end{cases}
+\end{align*}
+
+We may compute $s_n$ by computing and memoizing $s_i$ in the order $i = 2,
+3, \dots, n$ in $\Theta(n)$ total time. In fact, the OEIS indicates that $s_n$
+has an analytic $O(1)$ solution.
+
+### 10-5) (from TADM 3e)
+#### (a)
+We may use an unmodified version of Dijkstra's algorithm on the directed graph
+implied in the problem statement, where we embed vertices on an $s \times t$
+grid and there are directed edges from vertex $(i, j)$ to vertices $(i + 1, j)$
+and $(i, j + 1)$, and with the appropriate boundary conditions. Since the graph
+is sparse, it's prudent to use a binary heap (or similar structure) as the
+queue for the algorithm. The time complexity of this algorithm, if we use a
+binary heap for the queue, is then $\Theta((|E| + |V|) \log{(|V|)}) =
+\Theta(st\log{(st)})$.
+
+#### (b)
+The cheapest path to vertex $(i, j)$ is given by the recurrence
+
+\begin{align*}
+p_{(0, j)} &= 0 \\
+p_{(i, 0)} &= 0 \\
+p_{(1, 1)} &= 0 \\
+p_{(i, j)} &= \min{(p_{(i-1, j)} + \operatorname{weight}((i-1, j), (i, j)),
+                    p_{(i, j-1)} + \operatorname{weight}((i, j-1), (i, j))}
+\end{align*}
+
+We may compute $p_{s, t}$ by evaluating and memoizing this recurrence in
+row or column-major order in time $\Theta{(st)}$.
+
+### 8-1)
+See $\texttt{c/src/edit\_distance.c}$ for a modified implementation of
+$\texttt{string\_compare}$ with a $\texttt{swap}$ operation.
