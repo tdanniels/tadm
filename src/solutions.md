@@ -2023,7 +2023,7 @@ The shortest path from $i$ to $j$ is the concatenation of the shortest path
 from $i$ to $k$ with the shortest path from $k$ to $j$. Thus we can recursively
 build up this shortest path given $parent[][]$ as follows:
 
-```python3
+```python
 def path(i, j, parent) -> List[int]:
     if parent[i][j] is None:
         return [i, j]
@@ -2045,7 +2045,7 @@ the algorithm completes.
 We can use a modified Floyd-Warshall algorithm to find the maximum possible
 arbitrage. See below.
 
-```python3
+```python
 def maxarb(m):
     for k in range(len(m)):
         for i in range(len(m)):
@@ -2251,3 +2251,445 @@ row or column-major order in time $\Theta{(st)}$.
 ### 8-1)
 See $\texttt{c/src/edit\_distance.c}$ for a modified implementation of
 $\texttt{string\_compare}$ with a $\texttt{swap}$ operation.
+
+### 8-3)
+#### (a)
+The longest common substring shared between $X$ and $Y$ can be obtained through
+an edit distance-like dynamic programming algorithm which solves the following
+recurrence ($1 \leq i \leq n, 1 \leq j \leq m$):
+
+\begin{align*}
+d[i][0] &= 0 \\
+d[0][j] &= 0 \\
+d[i][j] &=
+    \begin{cases}
+        1 + m[i-1][j-1] & \text{if $X[i] = Y[j]$} \\
+        0  & \text{otherwise}
+    \end{cases}
+\end{align*}
+
+We may compute $d$ in row or column-major order. The length $l$ of the longest
+common substring is then the greatest value in $m$, located at indices
+$\hat{i}, \hat{j}$, which may be found by simply scanning all of $d$. The
+substring itself is given by $X[\hat{i} - l + 1], X[\hat{i} - l + 2], \dots,
+X[\hat{i}]$ (or the equivalent from $Y$).
+
+#### (b)
+```python
+def longest_common_substring(s, t):
+    n = len(s)
+    m = len(t)
+    maxcount = 0
+    maxj = 0
+    for i in range(n):
+        count = [0, 0]
+        for j in range(m):
+            ofs = (i + j) % n
+            if s[ofs] == t[j]:
+                idx = 0 if ofs < j else 1
+                count[idx] += 1
+                if count[idx] > maxcount:
+                    maxcount = count[idx]
+                    maxj = j - maxcount + 1
+            else:
+                count = [0, 0]
+    return t[maxj : maxj + maxcount]
+```
+
+### 8-5)
+#### (a)
+Yes. A proof by contradiction follows.
+
+Without loss of generality, let $P_1, P_2, \dots, P_n$ be sorted in increasing
+order. Let our greedy algorithm select programs $P_1$ up to and including
+$P_k$. Then we have
+\begin{align*}
+S_k = \sum_{i=1}^k s_i &\leq D\\
+S_k + s_{k+1} &> D
+\end{align*}
+If $k$ were not the maximal number of programs that could be stored, there
+would exist some $X \subset \{1, \dots, n\}$ such that $|X| > k$ and $\sum_{i
+\in X}^k s_i \leq D$. But this is impossible since at least one element of $X$
+must be greater than $k$, and the smallest possible sum over $k$ elements of
+$\{s_i\}$ is $S_k$, so $S_X \geq S_k + s_{k+1} > D$.
+
+\begin{flushright} \rule{1.2ex}{1.2ex} \end{flushright}
+
+#### (b)
+No. Counterexample: consider the instance $\{s_i\} = \{2, 3, 4\}$ with $D = 5$.
+The proposed greedy algorithm will select only the program of size 4 megabytes,
+while the optimal solution selects the programs of sizes 2 and 3 megabytes.
+
+### 8-7)
+#### (a)
+There are 7 ways:
+\begin{center}
+\begin{tabular}{ |c|c|c| }
+ \hline
+ 1 & 6 & 10 \\
+ \hline
+ 20 & 0 & 0 \\
+ 14 & 1 & 0 \\
+ 8 & 2 & 0 \\
+ 2 & 3 & 0 \\
+ 10 & 0 & 1 \\
+ 4 & 1 & 1 \\
+ 0 & 0 & 2 \\
+ \hline
+\end{tabular}
+\end{center}
+
+#### (b)
+We may view the change making problem as the recurrence relation
+
+\begin{align*}
+c_{i=0, d} &= 0 \\
+c_{i, d=0} &= 0 \\
+c_{i, d} &= \begin{cases}
+    c_{i, d-1} & \text{if $i < d$}\\
+    c_{i, d-1} + 1 & \text{if $i = d$}\\
+    c_{i, d-1} + c_{i-d, d} & \text{otherwise}
+\end{cases}
+\end{align*}
+
+This yields the natural dynamic programming algorithm given below.
+
+```python
+def change(n, d):
+    ds = sorted(d)
+    dpa = [0] * (n + 1)
+    for d_i in ds:
+        if d_i > n:
+            break
+        dpa[d_i] += 1
+        for i in range(d_i, n + 1):
+            dpa[i] += dpa[i - d_i]
+    return dpa[n]
+```
+
+The time complexity of the algorithm is $O(nk)$ since in the worst case it must
+perform $n$ constant-time table updates for each of the $k$ denominations.
+
+The space complexity if $O(n)$, since we don't need to store the whole $n
+\times k$ table as implied by the recurrence - just the row for the most recent
+$d$ suffices.
+
+### 8-9)
+Note that in this solution we assume that the weights $s_i$ and target $T$ are
+strictly positive, as is typically the case in knapsack problems.
+
+We may view the knapsack problem as the boolean-valued recurrence relation
+$p_{i, k}$ which indicates whether a subset of the first $i$ integers of $S$
+sums to $k$. $p_{i, k}$ is then defined as
+
+\begin{align*}
+p_{i, k} &= p_{i-1, k-s_i} \vee p_{i-1, k}
+\end{align*}
+
+and may be solved with the following dynamic programming algorithm.
+
+```python
+def knapsack(s, t):
+    s = [None, *s]
+    dpa = [[False for _ in range(t + 1)] for _ in range(len(s))]
+    for i in range(1, len(s)):
+        if s[i] > t:
+            continue
+        dpa[i][s[i]] = True
+    for i in range(1, len(s)):
+        for j in range(1, t + 1):
+            if dpa[i][j]:
+                continue
+            elif j - s[i] < 0:
+                dpa[i][j] = dpa[i - 1][j]
+            else:
+                dpa[i][j] = dpa[i - 1][j - s[i]] or dpa[i - 1][j]
+    return dpa[len(s) - 1][t]
+```
+
+### 8-11)
+We give an $O(n^2)$ time and space complexity solution below.
+
+```python
+def max_arc_sum(nums):
+    n = len(nums)
+    sums = [[0 for _ in range(n)] for _ in range(n)]
+    maxsum = nums[0]
+    for i in range(n):
+        for j in range(n):
+            tail = (i + j) % n
+            sums[i][tail] = nums[tail] + sums[i][(tail - 1) % n]
+            maxsum = max(maxsum, sums[i][tail])
+    return maxsum
+```
+
+### 8-13)
+We give an $O(nmk)$ time and $O(n)$ space complexity solution below.
+
+```python
+def dictionary_compression(d, s):
+    dpa = [len(s)] * len(s)
+    dpa[0] = 1
+    for i in range(len(s)):
+        for w in d:
+            if i + 1 >= len(w) and s[i + 1 - len(w) : i + 1] == w:
+                if i + 1 == len(w):
+                    dpa[i] = 1
+                else:
+                    dpa[i] = min(dpa[i], dpa[i - len(w)] + 1)
+    return dpa[len(s) - 1]
+```
+
+### 8-15)
+#### (a)
+$E(1, n)$ must be $n$ since in the worst case we need to try all floors from 1
+to $n$ in order to find $f$ without breaking our egg before we know $f$.
+
+#### (b)
+Suppose we know $E(k-1, n)$ and $E(k, n-1)$ for all $n \leq n_0$. We wish to
+find $E(k, n_0 + 1)$. This can be obtained by choosing the optimal floor
+$\hat{i}$ from which to drop an egg, so that the floors are split into two
+parts: floors $G$ for which $1 \leq g < \hat{i} \;\forall\; g \in G$, and
+floors $F$ for which $\hat{i} < f \leq n \;\forall\; f \in F$. If the egg
+breaks when we drop it, we will explore $G$, otherwise we will explore $F$. We
+choose $\hat{i}$ so that $\max{\left(E(k-1, |G|), E(k, |F|)\right)}$ is
+minimized.
+
+Since we know $E(1, n)$ is just $n$, let's try to find $E(2, n)$ . The maximum
+of $i$ and $n/2 - i$ is minimized when $i = n/4$ (ignoring remainders), so
+$E(2, n)$ is $1 + n/4 + O(1)$. Similarly, $E(3, n)$ is $(1 + n/4) / 2 + O(1)$.
+In general, $E(k, n)$ is $\Theta(n / 2^{k-1}) = \Theta(n^\frac{1}{k})$.
+
+#### (c)
+\begin{align*}
+E(1, n) &= n \\
+E(k, 1) &= 1 \\
+E(k, n) &= \min_{1 \leq x \leq n}{
+               \left(1 + \max\left(E(k, n-x), E(k-1, x-1)\right)\right)}
+\end{align*}
+
+An implementation is given below. The time complexity is $O(kn^2)$, and the
+space complexity is $O(kn)$.
+
+```python
+def egg(k, n):
+    dpa = [[0 for _ in range(n + 1)] for _ in range(k + 1)]
+    for i in range(1, k + 1):
+        dpa[i][1] = 1
+    for j in range(1, n + 1):
+        dpa[1][j] = j
+    for i in range(2, k + 1):
+        for j in range(2, n + 1):
+            mincost = n
+            for x in range(1, j + 1):
+                cost = 1 + max(dpa[i][j - x], dpa[i - 1][x - 1])
+                mincost = min(cost, mincost)
+            dpa[i][j] = mincost
+    return dpa[k][n]
+```
+
+### 8-17)
+```python
+def paths(bad):
+    m = len(bad)
+    n = len(bad[0])
+    dpa = [[0 for _ in range(n)] for _ in range(m)]
+
+    if bad[0][0] or bad[m - 1][n - 1]:
+        return 0
+    if m == 1 and n == 1:
+        return 1
+
+    if n > 1 and not bad[0][1]:
+        dpa[0][1] = 1
+    if m > 1 and not bad[1][0]:
+        dpa[1][0] = 1
+
+    for i in range(m):
+        for j in range(n):
+            if (u := i - 1) >= 0 and not bad[u][j]:
+                dpa[i][j] += dpa[u][j]
+            if (l := j - 1) >= 0 and not bad[i][l]:
+                dpa[i][j] += dpa[i][l]
+    return dpa[m - 1][n - 1]
+```
+
+### 8-19)
+A counterexample to the greedy algorithm: consider the problem instance
+$$n = 3, L = 3, h = (1, 2, 2), t = (1, 1, 2)$$
+The greedy algorithm would place books 1 and 2 on shelf 1, book 3 on shelf 2,
+and set the height of both shelves to 2, for a total cost of 4. An optimal
+algorithm would place book 1 on shelf 1 and books 2 and 3 on shelf 2 and set
+the height of shelf 1 to 1 and the height of shelf 2 to 2, for a total cost of
+3.
+
+A dynamic programming solution to the problem is given below.
+
+```python
+def min_shelf_height(l, h, t):
+    assert len(h) == len(t)
+    n = len(h)
+    maxcost = sum(h)
+    dpa = [[[0 for _ in range(n + 1)] for _ in range(n + 1)] for _ in range(n + 1)]
+
+    for i in range(1, n + 1):
+        for j in range(i, n + 1):
+            if sum(t[i - 1 : j]) <= l:
+                dpa[1][i][j] = max(h[i - 1 : j])
+            else:
+                dpa[1][i][j] = maxcost
+            dpa[0][i][j] = maxcost
+    for k in range(2, n + 1):
+        for i in range(1, n + 1):
+            for j in range(i, n + 1):
+                mincost = maxcost
+                for s in range(1, k + 1):
+                    for d in range(1, j):
+                        mincost = min(mincost, dpa[s][i][d] + dpa[k - s][d + 1][j])
+                dpa[k][i][j] = mincost
+    mincost = maxcost
+    for k in range(1, n + 1):
+        mincost = min(mincost, dpa[k][1][n])
+    return mincost
+```
+
+The time complexity is an abysmal $O(n^5)$ and the space complexity is
+$O(n^3)$. It's probably possible to get the time complexity down to $O(n^3)$ or
+$O(n^4)$ with some optimization around the two innermost loops.
+
+### 8-21)
+The $\Theta(n^2)$ algorithm:
+
+```python
+def max_contiguous_sum(v):
+    n = len(v)
+    prefixes = [0] * (n + 1)
+    prefixes[0] = 0
+    s = max(v)
+    for i in range(1, n + 1):
+        prefixes[i] = prefixes[i - 1] + v[i - 1]
+    for i in range(n):
+        for j in range(i + 1, n + 1):
+            s = max(s, prefixes[j] - prefixes[i])
+    return s
+```
+
+The $\Theta(n)$ algorithm:
+
+```python
+def max_contiguous_sum_dp(v):
+    n = len(v)
+    partials = [0] * n
+    partials[0] = v[0]
+    if partials[0] < 0:
+        lastneg = 0
+    else:
+        lastneg = None
+    for i in range(1, n):
+        partials[i] = partials[i - 1] + v[i]
+        if lastneg is not None and partials[lastneg] < 0:
+            partials[i] -= partials[lastneg]
+            lastneg = None
+        if v[i] < 0:
+            lastneg = i
+    return max(partials)
+```
+
+### 8-23)
+Let's assume that the problem is actually asking for us to optimize the
+\textit{expected} query cost, since otherwise the probability vector $p$ would
+be irrelevant. Let's also assume that we are working with a binary search tree,
+and, without loss of generality, that $k_i = i$.
+
+The expected query cost for a tree $T$ on vertices $i, \ldots, j$ ($1 \leq i
+\leq j \leq n$) may be expressed as
+
+\begin{align*}
+C(T) &= \sum_{l=i}^j p_l(\alpha L_T(l) + \beta R_T(l)) \\
+\end{align*}
+
+where $L_T(v)$ and $R_T(v)$ are the number of leftwards and rightwards edges on
+the path from the root of $T$ to vertex $v$, respectively.
+
+We may expand $C(T)$ into a recurrence relation by breaking the tree
+$T$ into two subtrees, $T_L$ and $T_R$, rooted at a vertex $k$.
+
+\begin{align*}
+C(T) &= \sum_{l=i}^j p_l(\alpha L_T(l) + \beta R_T(l)) \\
+&= \sum_{l=i}^{k-1} p_l(\alpha(L_{T_L}(l) + 1) + \beta R_{T_L}(l))
+ + \sum_{l=k+1}^j p_l(\alpha L_{T_R}(l) + \beta(R_{T_R}(l) + 1)) \\
+&= C(T_L) + C(T_R) + \alpha \sum_{l=i}^{k-1} p_l + \beta \sum_{l=k+1}^j p_l
+\end{align*}
+
+A dynamic programming implementation of this recurrence is given below. In it,
+we complete the dynamic programming table in segments $i, \ldots, j$ of
+increasing length so as to always have the required table entries available.
+
+```python
+import math
+
+
+def probtree(probs, alpha, beta):
+    n = len(probs)
+    c = [[0 for _ in range(n + 1)] for _ in range(n + 1)]
+    r = [[None for _ in range(n + 1)] for _ in range(n + 1)]
+    for s in range(2, n + 1):
+        for i in range(1, n + 1):
+            j = min(n, i + s - 1)
+            mincost = math.inf
+            for k in range(i, j + 1):
+                lcost = c[i][k - 1]
+                rcost = c[k + 1][j] if k + 1 <= j else 0
+                acost = alpha * sum(probs[i - 1 : k - 1])
+                bcost = beta * sum(probs[k:j])
+                cost = lcost + rcost + acost + bcost
+                if cost < mincost:
+                    mincost = cost
+                    root = k
+            c[i][j] = mincost
+            r[i][j] = root
+    return c[1][n], r
+```
+
+The above algorithm runs in $(On^3)$ time and $O(n^2)$ space complexity. In
+fact, it may be possible to achieve $O(n^2)$ time complexity by placing tighter
+bounds on the search range of $k$, but I've spent enough time on this problem
+already.
+
+
+### 8-25)
+```python
+def max_contiguous_sum_dp(v):
+    n = len(v)
+    partials = [[0, 0] for _ in range(n)]
+    partials[0][0] = v[0]
+    if partials[0][0] < 0:
+        lastneg = 0
+    else:
+        lastneg = None
+    for i in range(1, n):
+        partials[i] = [partials[i - 1][0] + v[i], partials[i - 1][1]]
+        if lastneg is not None and partials[lastneg][0] < 0:
+            partials[i][0] -= partials[lastneg][0]
+            partials[i][1] = lastneg + 1
+            lastneg = None
+        if v[i] < 0:
+            lastneg = i
+    maxp = partials[0][0]
+    maxi = partials[0][1]
+    for i, p in enumerate(partials):
+        if p[0] > maxp:
+            maxp = p[0]
+            maxi = [p[1], i]
+    return maxp, maxi
+```
+
+### L8-1)
+https://leetcode.com/problems/binary-tree-cameras/
+
+See $\texttt{python/src/l08\_01.py}$.
+
+### L8-3)
+https://leetcode.com/problems/maximum-product-of-splitted-binary-tree/
+
+See $\texttt{python/src/l08\_03.py}$.
