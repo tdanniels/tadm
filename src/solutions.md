@@ -1434,7 +1434,7 @@ Starting from the leaves, set $cost[u][0] = 0$ and $cost[u][1] =
 \operatorname{weight}(u)$. Then, recursing back up the DFS, set $$cost[u][0] =
 \sum_{c \in \operatorname{children}{(u)}} cost[c][1]$$ and $$cost[u][1] =
 \operatorname{weight}{(u)} + \sum_{c \in \operatorname{children}{(u)}}
-\min_i{(c[i])}$$
+\min_{i \in \{0, 1\}}{(cost[c][i])}$$
 Once all vertices have their costs assigned,
 $\operatorname{min}_i{(cost[root][i]})$ is the minimum vertex cover cost. We
 can then find the minimum cover by running another DFS from the root in which
