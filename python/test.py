@@ -677,6 +677,17 @@ class TestCombinatorial(unittest.TestCase):
             combinatorial.keypad_words(seq, dictionary), ["ace", "bad", "cad"]
         )
 
+    def test_cnf_sat(self):
+        self.assertTrue(combinatorial.cnf_sat(1, [[1]]))
+        self.assertTrue(combinatorial.cnf_sat(1, [[-1]]))
+        self.assertFalse(combinatorial.cnf_sat(1, [[1], [-1]]))
+        self.assertTrue(combinatorial.cnf_sat(2, [[1, 2], [-1, 2]]))
+        self.assertFalse(combinatorial.cnf_sat(2, [[1, 2], [-1, 2], [1, -2], [-1, -2]]))
+        self.assertTrue(combinatorial.cnf_sat(2, [[1, 2], [-1, 2], [1, -2]]))
+        self.assertTrue(combinatorial.cnf_sat(3, [[1], [1, 2], [1, 2, 3]]))
+        self.assertFalse(combinatorial.cnf_sat(3, [[1], [-3], [-1, 2], [-1, -2, 3]]))
+        self.assertTrue(combinatorial.cnf_sat(3, [[-1], [-3], [-1, 2], [-1, -2, 3]]))
+
 
 class TestGraph(unittest.TestCase):
     def test_floyd_warshall(self):

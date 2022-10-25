@@ -602,3 +602,111 @@ def keypad_words(digit_seq: [int], dictionary: [str]) -> [str]:
 
 
 # end snippet keypad-words
+
+# start snippet cnf-sat
+class CnfSatSolver(Solver):
+    def __init__(self, n, clauses):
+        self.n = n
+        self.out = False
+
+        # Check for variables that are never / always negated.
+        never_negated = [True] * (n + 1)
+        always_negated = [True] * (n + 1)
+        for i in range(1, n + 1):
+            for c in clauses:
+                if i in c:
+                    always_negated[i] = False
+                elif -i in c:
+                    never_negated[i] = False
+
+        # Appropriately fix variables that are never / always negated.
+        self.fixed = [None] * (n + 1)
+        for i in range(1, n + 1):
+            if never_negated[i]:
+                self.fixed[i] = True
+            elif always_negated[i]:
+                self.fixed[i] = False
+
+        # Remove clauses with never / always negated variables.
+        fclauses = []
+        for c in clauses:
+            add = True
+            for l in c:
+                if self.fixed[abs(l)] is not None:
+                    add = False
+                    break
+            if add:
+                fclauses.append(c[:])
+
+        # Remove single variable clauses.
+        sfclauses = []
+        for c in fclauses:
+            if len(c) == 1:
+                self.fixed[c[0]] = c[0] > 0
+            else:
+                sfclauses.append(c[:])
+
+        # Remove clauses with non-negated variables that are fixed to True, and
+        # clauses with negated variables that are fixed to False. Otherwise remove
+        # fixed variables from clauses that contain them.
+        xclauses = []
+        for c in fclauses:
+            add_clause = True
+            add_var = [True] * (len(c) + 1)
+            for l in c:
+                if l > 0 and self.fixed[l] or l < 0 and self.fixed[-l] == False:
+                    add_clause = False
+                    break
+                if l < 0 and self.fixed[-l] or l > 0 and self.fixed[l] == False:
+                    add_var[abs(l)] = False
+            if add:
+                clause = [v for i, v in enumerate(c) if add_var[i]]
+                xclauses.append(clause)
+
+        self.clauses = xclauses
+
+    def is_soln(self, a, k, finished):
+        for c in self.clauses:
+            cs = False
+            for l in c:
+                if (l > 0 and a[l]) or (l < 0 and not a[-l]):
+                    cs = True
+                    break
+            if not cs:
+                return False
+        return True
+
+    def process_soln(self, a, k, finished):
+        self.out = True
+        finished[0] = True
+
+    def construct_cands(self, a, k, finished):
+        if k <= self.n:
+            if self.fixed[k] is not None:
+                return (self.fixed[k],)
+            else:
+                return (True, False)
+        else:
+            return tuple()
+
+
+def cnf_sat(n, clauses):
+    """
+    Solve CNF-SAT instances.
+
+    `n` is the number of variables (literals).
+
+    `clauses` is of the form [[1, 2, -3], [-2, 3, -4]], which corresponds
+    to the CNF-SAT instance (x_1, x_2, ~x_3) (~x_2, x_3, ~x_4).
+
+    Note that literals are indexed from 1 and thus the literals in `clauses`
+    must not be zero.
+    """
+    a = [False] * (n + 1)
+    finished = [False]
+    s = CnfSatSolver(n, clauses)
+    backtrack(a, 0, finished, s)
+    return s.out
+
+
+# end snippet cnf-sat

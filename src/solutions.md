@@ -2693,3 +2693,244 @@ See $\texttt{python/src/l08\_01.py}$.
 https://leetcode.com/problems/maximum-product-of-splitted-binary-tree/
 
 See $\texttt{python/src/l08\_03.py}$.
+
+## Chapter 9
+Note: due to time constraints, most hardness reductions in this chapter are
+given without accompanying proofs.
+
+### 9-1)
+\begin{align*}
+&(x + y + \overline{z} + w + u + v) \cdot
+(\overline{x} + \overline{y} + z + \overline{w} + u + v) \cdot
+(x + \overline{y} + \overline{z} + w + u + \overline{v}) \cdot
+(x + \overline{y}) \\
+=\;
+&(x + y + \overline{a}_{1,1}) \cdot
+(a_{1,1} + \overline{z} + \overline{a}_{1,2}) \cdot
+(a_{1,2} + w + \overline{a}_{1,3}) \cdot
+(a_{1,3} + u + v) \cdot \\
+&(\overline{x} + \overline{y} + \overline{a}_{2,1}) \cdot
+(a_{2,1} + z + \overline{a}_{2,2}) \cdot
+(a_{2,2} + \overline{w} + \overline{a}_{2,3}) \cdot
+(a_{2,3} + u + v) \cdot \\
+&(x + \overline{y} + \overline{a}_{3,1}) \cdot
+(a_{3,1} + \overline{z} + \overline{a}_{3,2}) \cdot
+(a_{3,2} + w + \overline{a}_{3,3}) \cdot
+(a_{3,3} + u + \overline{v}) \cdot \\
+&(x + \overline{y} + \overline{a}_{4,1}) \cdot
+(a_{4,1} + x + \overline{y})
+\end{align*}
+
+### 9-3)
+Suppose we have a subroutine Linear-TSP which solves the TSP decision problem
+in linear time. We may then obtain the optimal tour $\hat{t}$ in a polynomial
+number of calls to Linear-TSP as follows.
+
+First, determine the optimal tour cost $\hat{k} = \operatorname{cost}(\hat{t})$
+through binary search. This can be done in $O(\lg{(|V|)})$ time, since
+$\hat{k}$ is $O(|V| \cdot \max_{e \in E}(\operatorname{weight}(e))$.
+
+Next, initialize a set $R$ to $\{\}$. We may determine the edges present in
+$\hat{t}$ by iterating over all edges $e_i$ and, for each one, calling
+$\operatorname{Linear-TSP}((V, E \mathbin{\backslash} (R \cup \{e_i\})),
+\hat{k})$. If the subroutine returns true, add $e_i$ to $R$ permanently, since
+$e_i$ is necessarily in $\hat{t}$. We may thus determine all edges in $\hat{t}$
+in $O(|V|^3)$ time, since Linear-TSP is $O(|V|)$ and we make $|E| \in O(|V|^2)$
+calls to it. Finally, sort the edges in $E \mathbin{\backslash} R$ tip-to-tail
+to obtain $\hat{t}$. This can be done in $O(|V|\lg{(|V|)})$ time, for an
+overall worst case time complexity of $O(|V|^3)$.
+
+### 9-5)
+Let's assume that the problem is asking for a backtracking CNF-SAT solver. An
+implementation using the backtracking framework of chapter 7 is given below.
+
+Pruning is done prior to beginning the search. We fix variables appropriately
+if they always appear either negated or non-negated, or if they appear in any
+single-variable clauses. Clauses containing fixed variables are then either
+deleted if they are sure to be true, or the fixed variable is removed from the
+clause.
+
+```{.python include=python/src/combinatorial.py snippet=cnf-sat}
+```
+
+### 9-7)
+A reduction from vertex cover to set cover is given below.
+
+Consider a vertex cover instance $\{G = (V, E), k\}$. Let $N = |V|$. Construct
+$A = \{a_1, \ldots, a_N\}$ as the set of all edge subsets $a_i$ such that the
+edges in $a_i$ are the ones adjacent to vertex $v_i$. We can then solve
+$\operatorname{VertexCover}{(G, k)}$ by running $\operatorname{SetCover}{(X, F,
+k)}$ with $X = E$ and $F = A$. This reduction can clearly be done in polynomial
+time, and thus set cover is NP-complete.
+
+### 9-9)
+#### (a)
+We may reduce HamiltonianPath to LowDegreeSpanning tree as follows:
+```
+HamiltonianPath(G):
+    return LowDegreeSpanningTree(G, 2)
+```
+This works since a tree of maximum degree 2 is a path, and the fact that it's a
+spanning tree means that all vertices in G are visited in the path, as required
+by HamiltonianPath.
+
+#### (b)
+```
+HighDegreeSpanningTree(G, k):
+    if G is connected and G has a vertex v with d(v) >= k:
+        return True
+    return False
+```
+This works because we can always construct a spanning tree that includes a
+vertex $v$ with $d(v) \geq k$ if such a vertex exists, e.g. by running BFS
+rooted at $v$. The worst-case time complexity is $O(n)$, since we can prove
+connectivity and check degrees with BFS.
+
+### 9-11)
+We may reduce Clique to CliqueNoClique as follows:
+```
+Clique(G, k):
+    let G' := G with the addition of k new edgeless vertices
+    return CliqueNoClique(G', k)
+```
+
+### 9-13)
+In order to reduce SetCover to HittingSet we need to assign a label to each set
+in $F$, the family of subsets given as input to SetCover. We denote the label
+of $f \in F$ as $\operatorname{label}{(f)}$. The reduction is then as follows.
+```
+SetCover(X, F, k):
+    let X' := { { label(f) \forall f \in F s.t. x \in f } \forall x \in X }
+    let F' := { label(f) \forall f \in F }
+    return HittingSet(C = X', S = F', k)
+```
+
+### 9-15)
+We may reduce HamiltonianCycle to HamiltonianPath as follows:
+```
+HamiltonianCycle(G = (V, E)):
+    for each edge (u, v) in E:
+        if HamiltonianPath(G, u, v):
+            return True
+    return False
+```
+
+### 9-17)
+We may reduce VertexCover to DominatingSet as follows:
+```
+VertexCover(G = (V, E), k):
+    for each edge (u, v) \in E, create a new vertex uv and edges (u, uv)
+        and (v, uv).
+    let G' := G with the additional vertices and edges as described above.
+    return DominatingSet(G', k)
+```
+This works by adding additional vertices and edges to $G$ so that when we
+include a vertex $v$ in the dominating set, we don't automatically consider the
+edges incident to $v$'s neighbours covered. For example, this process would transform
+$K_3$ as shown below.
+```
+                ab---a---ac
+  a               \ / \ /
+ / \     ---->     b---c
+b---c               \ /
+                    bc
+```
+
+### 9-19)
+We may reduce IndependentSet to SetPacking as follows:
+```
+IndependentSet(G = (V, E), k):
+    let S := E
+    for v \in V:
+        let c_v := { all e \in E incident to v }
+    for each e \in E:
+        let c_e := { e }
+    let C := the set containing all c_v and c_e
+    return SetPacking(S, C, k)
+```
+This works because a set packing of the problem instances described in the
+reduction above is equivalent to a set of vertices with no edges in common.
+
+### 9-21)
+An algorithm for Hamiltonian Path on a DAG is given below.
+
+First, topologically sort the DAG to obtain a topological ordering of $V$,
+$v_1, \ldots, v_n$. Then, perform a modified DFS starting from $v_1$ in which
+we never go backwards (recurse upwards), and always select the lowest numbered
+neighbour of the current vertex to visit next.
+
+If we reach $v_n$ having visited all other vertices, then $G$ contains a
+Hamiltonian path. Otherwise, $G$ doesn't contain a Hamiltonian path.
+
+The algorithm runs in $O(n+m)$ time since both topological sort and DFS run in
+$O(n+m)$ time.
+
+### 9-23)
+A certificate $c$ for the length-$k$ simple path decision problem can be
+verified in polynomial time by checking that $c$ encodes a valid path in $G$,
+and that $c$ is of length $k$. Since the problem is thus polynomial-time
+verifiable, it is in NP.
+
+A certificate $c$ for composite number testing would encode a factorization of
+$n$, and could be verified by multiplying out the numbers in the factorization
+and checking that the product equals $n$.
+
+A certificate for a size-$k$ vertex cover of a graph $G$ would encode the
+vertices in the cover, and could be verified by testing that $|c| = k$ and that
+the set of all edges adjacent to a vertex in $c$ equals $E$.
+
+### 9-25)
+A simple approximation algorithm for max-sat is to first check how many clauses
+are satisfied when each variable is assigned true, and when each variable is
+assigned false. Then output the assignment that satisfies the greater number of
+clauses.
+
+This scheme has an approximation factor of 0.5 since each clause is satisfied
+in at least one of the all-true or all-false assignments. Thus one of the
+assignment schemes must satisfy at least half of the clauses.
+
+### 9-27)
+The stated greedy algorithm for max-cut achieves an approximation factor $f$ of
+0.5 in the following way.
+
+In the initial step, we assign $v_1$ to $A$ and $v_2$ to $B$. If this
+assignment appears in the optimal solution, then we are optimal so far,
+otherwise we miss out on an edge contribution of at most 1.
+
+Now consider the cut status of each edge in $E$: either fully undertermined
+(neither side is in $A$ or $B$), partially determined (one half is in $A$ or
+$B$, the other half is not yet in a set), or determined as being in the cut set
+or not being in the cut set. If we can show that, whenever a collection of
+edges moves from partially undetermined to determined that at least half of
+them move into the cut set, then it must be the case that $f \geq |E| / 2$. But
+this is guaranteed by the greedy property of the algorithm: when choosing
+whether to place a vertex $v$ in $A$ or $B$, we choose the set that maximizes
+$v$'s contribution to the cut set, which must be at least half of the partially
+determined edges incident to $v$, for otherwise we would choose to place $v$ in
+the other set.
+\begin{flushright} \rule{1.2ex}{1.2ex} \end{flushright}
+
+(In fact, this algorithm achieves an approximation factor of $|E| / 2$, which
+is better than as stated in the problem.)
+
+### 9-29)
+$$w = [0.09, 0.09, 0.09, 0.09, 0.09, 0.09, 0.09, 0.38, 0.38, 0.51, 0.51, 0.51]$$
+(weights are given in kilograms).
+
+The greedy algorithm allocates bins as follows:
+
+\begin{align*}
+1:\; & 0.09, 0.09, 0.09, 0.09, 0.09, 0.09, 0.09 \\
+2:\; & 0.38, 0.38 \\
+3:\; & 0.51 \\
+4:\; & 0.51 \\
+5:\; & 0.51
+\end{align*}
+
+Whereas an optimal bin allocation is:
+
+\begin{align*}
+1:\; & 0.51, 0.09, 0.09, 0.09, 0.09, 0.09 \\
+2:\; & 0.51, 0.38, 0.09 \\
+3:\; & 0.51, 0.38, 0.09
+\end{align*}
