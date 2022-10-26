@@ -2934,3 +2934,13 @@ Whereas an optimal bin allocation is:
 2:\; & 0.51, 0.38, 0.09 \\
 3:\; & 0.51, 0.38, 0.09
 \end{align*}
+
+### L9-1)
+https://leetcode.com/problems/target-sum/
+
+See $\texttt{python/src/l09\_01.py}$.
+
+### L9-3)
+https://leetcode.com/problems/number-of-squareful-arrays/
+
+See $\texttt{python/src/l09\_03.py}$.
