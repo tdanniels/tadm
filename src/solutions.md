@@ -828,7 +828,7 @@ Consider a complete binary tree that stores all $n$ values in its leaf nodes.
 If $n = 2^k$, no modifications are required, otherwise we can pad out the tree
 with infinite-valued nodes which have no effect on $\min$ queries. The tree's
 internal nodes store the minimum values of all nodes beneath them. A tree of
-this description would require $\Omega(n)$ space: $n$ leaf nodes and $n-1$
+this description would require $\Theta(n)$ space: $n$ leaf nodes and $n-1$
 internal nodes.
 
 Queries are answered recursively. Given a sequence $X = x_1, \dots, x_n$ and a tree
