@@ -561,7 +561,7 @@ $n\log{n}$
 
 #### (d)
 $g(n) = n\log{n}$, since Stirling's approximation states that $log_2{n!} =
-n\log{n} - n\log{e} + \Theta(\log{n})$, and $l\log{n}$ is the dominant term.
+n\log{n} - n\log{e} + \Theta(\log{n})$, and $n\log{n}$ is the dominant term.
 
 ### 2-27)
 1. $f_2(n) \in O(\sqrt{n} \log{n})$
