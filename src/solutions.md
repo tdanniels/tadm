@@ -1225,7 +1225,7 @@ somewhat well known "saddleback" search given below.
 ```
 
 The saddleback algorithm makes at most $n + m - 1$ comparisons. I haven't
-analyzed the complexity of "2-D binary search," though is most likely superlinear.
+analyzed the complexity of "2-D binary search," though it is most likely superlinear.
 
 ### 4-37)
 See $\texttt{python/src/sorting.py}$ for the implementation.
