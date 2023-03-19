@@ -1542,10 +1542,13 @@ Inductive step: Consider a tournament on the $n$-node graph $G$. By assumption
 there is a Hamiltonian path $v_1, \ldots, v_n$ in $G$. Now add an another
 vertex $w$ to $G$ and connect it arbitrarily to the other nodes in $G$ such
 that $G$ remains a tournament. There are three possibilities:
+
 1. There exists an edge $(w, v_1)$. In this case our new Hamiltonian path is
-   $w, v_1, \ldots, v_n$
+   $w, v_1, \ldots, v_n$.
+
 2. There exists an edge $(v_n, w)$. In this case our new Hamiltonian path is
-   $v_1, \ldots, v_n, w$
+   $v_1, \ldots, v_n, w$.
+
 3. Consider the first node $v_i$ in $v_1, \ldots, v_n$ reachable from $w$.
    Such a node must exist since the case in which $w$ has no outgoing edges
    is covered by case 2. Now consider $v_{i-1}$. There must exist an edge
