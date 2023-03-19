@@ -1112,9 +1112,9 @@ in which all $n$ (unique) items are sorted in reverse order.
 #### (b)
 Consider a permutation $P$ on $n$ unique items and its reversal $P^r$. Suppose
 $P$ has $k$ inversions. Then the remaining pairs in $P$, of which there must be
-$\binom{n}{2} - k = n(n-1) - k$, are not inverted. Since $P$'s reversal $P^r$
+$\binom{n}{2} - k = n(n-1)/2 - k$, are not inverted. Since $P$'s reversal $P^r$
 turns inverted pairs into non-inverted pairs and vice-versa, we then have a total
-of $k + n(n-1) - k = n(n-1)$ inversions between them.
+of $k + n(n-1)/2 - k = n(n-1)/2$ inversions between them.
 
 #### (c)
 Consider the set $P$ of all permutations on $n$ distinct items. The cardinality
