@@ -1184,7 +1184,7 @@ its maximum value is $\hat{\theta}$.
 ### 4-29)
 If such a priority queue existed, $O(n)$ comparison-based sorting could be
 implemented by inserting all elements in a sequence into the queue at a cost of
-$O(n)$ ($n times $O(1)$), and then extracting them all into an array, also at a
+$O(n)$ ($n$ times $O(1)$), and then extracting them all into an array, also at a
 cost of $O(n)$. This contradicts the $\Omega(n\log{n})$ lower bound on
 comparison-based sorting, and so such a queue cannot exist.
 
