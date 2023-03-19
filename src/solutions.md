@@ -1096,7 +1096,7 @@ $a$ and $b$ in the process as well.
 Quicksort would make $$\sum_{i=0}^{\lg{n} - 1} n = n\lg{n}$$ comparisons.
 
 #### (b)
-Quicksort would make $$\sum_{i=0}^{\log_{3/2}{n} - 1} n = n \log_{3/2}{n} \approx 1.71\lg{n}$$ comparisons.
+Quicksort would make $$\sum_{i=0}^{\log_{3/2}{n} - 1} n = n \log_{3/2}{n} \approx 1.71\; n\lg{n}$$ comparisons.
 
 ### 4-19)
 #### (a)
