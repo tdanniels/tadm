@@ -18,7 +18,7 @@ def collatz(n):
     return i
 
 
-def solve(i, j):
+def solve(i: int, j: int):
     max_cyc = 0
     for k in range(min(i, j), max(i, j) + 1):
         max_cyc = max(max_cyc, collatz(k))
