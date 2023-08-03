@@ -18,12 +18,12 @@ testpy:
 .PHONY: testrs
 testrs:
 	@for p in rust/**/Cargo.toml; do \
-		cd "$$(dirname "$$p")" && cargo test && cd -; \
+		(cd "$$(dirname "$$p")" && cargo test); \
 	done
 
 .PHONY: clean
 clean:
 	@rm -f bin/solutions.pdf
 	@for p in rust/**/Cargo.toml; do \
-		cd "$$(dirname "$$p")" && cargo clean && cd -; \
+		(cd "$$(dirname "$$p")" && cargo clean); \
 	done
